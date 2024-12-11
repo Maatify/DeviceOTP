@@ -20,15 +20,15 @@ use Maatify\CronSms\CronSmsCustomerRecord;
 
 abstract class DeviceSmsOTP extends DbConnector
 {
-    public const TABLE_NAME                 = 'ct_sms_otp';
-    public const TABLE_ALIAS                = '';
-    public const IDENTIFY_TABLE_ID_COL_NAME = 'otp_id';
-    public const ENTITY_COL_NAME            = 'ct_id';
-    protected const EXPIRY = 60;
+    public const    TABLE_NAME                 = 'ct_sms_otp';
+    public const    TABLE_ALIAS                = '';
+    public const    IDENTIFY_TABLE_ID_COL_NAME = 'otp_id';
+    public const    ENTITY_COL_NAME            = 'ct_id';
+    public const    EXPIRY                     = 60;
 
-    public const LOGGER_TYPE                = self::TABLE_NAME;
-    public const LOGGER_SUB_TYPE            = '';
-    public const COLS                       = [
+    public const LOGGER_TYPE     = self::TABLE_NAME;
+    public const LOGGER_SUB_TYPE = '';
+    public const COLS            = [
         self::IDENTIFY_TABLE_ID_COL_NAME => 1,
         self::ENTITY_COL_NAME            => 1,
         'device_id'                      => 0,
@@ -82,7 +82,7 @@ abstract class DeviceSmsOTP extends DbConnector
             AND `$this->tableName`.`device_id` = ? 
             ORDER BY `$this->tableName`.`$this->identify_table_id_col_name` DESC",
 
-            [$entity_id,0,$device_id]);
+            [$entity_id, 0, $device_id]);
     }
 
     public function lastPending(int $otp_id): array
