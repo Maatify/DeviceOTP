@@ -17,10 +17,17 @@ use Maatify\Json\FunJson;
 
 abstract class DeviceSmsOTPRequest extends DeviceSmsOTP
 {
-    protected int $tries_second_codes = 3; //for wait for second code
-    protected int $tries_third_codes = 5; // for wait for third code
-    protected int $tries_last_codes = 10; // for wait for last code
-    protected int $otp_length = 6;
+    public const TRIES_SECOND_CODES = 3; //for wait for second code
+    protected int $tries_second_codes = self::TRIES_SECOND_CODES;
+
+    public const TRIES_THIRD_CODES = 5; // for wait for third code
+    protected int $tries_third_codes = self::TRIES_THIRD_CODES;
+
+    public const TRIES_LAST_CODES = 10; // for wait for third code
+    protected int $tries_last_codes = self::TRIES_LAST_CODES;
+
+    public const OTP_LENGTH = 6;
+    protected int $otp_length = self::OTP_LENGTH;
 
     private array $exist = [];
 
