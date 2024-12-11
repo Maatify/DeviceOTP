@@ -15,6 +15,7 @@ namespace Maatify\DeviceSmsOTP;
 
 use \App\Assist\Encryptions\SmsOtpEncryption;
 use \App\DB\DBS\DbConnector;
+use Maatify\CronSms\CronRecordInterface;
 use Maatify\CronSms\CronSmsAdminRecord;
 use Maatify\CronSms\CronSmsCustomerRecord;
 
@@ -48,7 +49,7 @@ abstract class DeviceSmsOTP extends DbConnector
     protected array $cols = self::COLS;
 
     protected SmsOtpEncryption $encryption;
-    protected CronSmsCustomerRecord|CronSmsAdminRecord $corn_sender;
+    protected CronRecordInterface $corn_sender;
 
     public function __construct()
     {
