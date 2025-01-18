@@ -16,7 +16,6 @@ namespace Maatify\DeviceSmsOTP;
 use \App\Assist\Encryptions\SmsOtpEncryption;
 use \App\DB\DBS\DbConnector;
 use Maatify\CronSms\CronRecordInterface;
-use Maatify\CronSms\CronSmsAdminRecord;
 use Maatify\CronSms\CronSmsCustomerRecord;
 
 abstract class DeviceSmsOTP extends DbConnector
@@ -32,6 +31,7 @@ abstract class DeviceSmsOTP extends DbConnector
     public const COLS            = [
         self::IDENTIFY_TABLE_ID_COL_NAME => 1,
         self::ENTITY_COL_NAME            => 1,
+        'app_type_id'                    => 1,
         'device_id'                      => 0,
         'code'                           => 0,
         'time'                           => 0,
