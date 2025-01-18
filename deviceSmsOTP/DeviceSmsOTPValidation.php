@@ -13,9 +13,9 @@ namespace Maatify\DeviceSmsOTP;
 
 abstract class DeviceSmsOTPValidation extends DeviceSmsOTP
 {
-    public function validate(int $entity_id, string $code, string $device_id): array
+    public function validate(string $code): array
     {
-        if ($exists = $this->pendingList($entity_id, $device_id)) {
+        if ($exists = $this->pendingList()) {
             foreach ($exists as $exist) {
                 if (password_verify($code, $this->encryption->DeHashed((string)$exist['code']))) {
                     if (strtotime($exist['time'] . ' + ' . $exist['expiry'] . ' minute') >= time()) {

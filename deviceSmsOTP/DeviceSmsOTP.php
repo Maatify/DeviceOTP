@@ -15,8 +15,8 @@ namespace Maatify\DeviceSmsOTP;
 
 use \App\Assist\Encryptions\SmsOtpEncryption;
 use \App\DB\DBS\DbConnector;
+use Maatify\AppController\Enums\EnumAppTypeId;
 use Maatify\CronSms\CronRecordInterface;
-use Maatify\CronSms\CronSmsAdminRecord;
 use Maatify\CronSms\CronSmsCustomerRecord;
 
 abstract class DeviceSmsOTP extends DbConnector
@@ -32,6 +32,7 @@ abstract class DeviceSmsOTP extends DbConnector
     public const COLS            = [
         self::IDENTIFY_TABLE_ID_COL_NAME => 1,
         self::ENTITY_COL_NAME            => 1,
+        'app_type_id'                    => 1,
         'device_id'                      => 0,
         'code'                           => 0,
         'time'                           => 0,
@@ -58,17 +59,56 @@ abstract class DeviceSmsOTP extends DbConnector
         $this->corn_sender = new CronSmsCustomerRecord();
     }
 
-    public function pendingList(int $entity_id, string $device_id): array
+    protected string $device_id;
+    protected EnumAppTypeId $app_type_id = EnumAppTypeId::Web;
+    protected int $entity_id;
+
+    public function setDeviceId(string $device_id): self
+    {
+        $this->device_id = $device_id;
+        return $this;
+    }
+
+    public function getDeviceId(): string
+    {
+        return $this->device_id;
+    }
+
+    public function setAppTypeId(EnumAppTypeId $appTypeId): self
+    {
+        $this->app_type_id = $appTypeId;
+        return $this;
+    }
+
+    public function getAppTypeId(): EnumAppTypeId
+    {
+        return $this->app_type_id;
+    }
+
+    public function setEntityId(int $entityId): self
+    {
+        $this->entity_id = $entityId;
+        return $this;
+    }
+    public function getEntityId(): int
+    {
+        return $this->entity_id;
+    }
+
+    public function pendingList(): array
     {
         return $this->RowsThisTable(
             "`$this->identify_table_id_col_name`, `code`, `time`, `expiry`",
-            "`$this->entity_col_name` = ? AND `is_success` = ? AND `device_id` = ? 
+            "`$this->entity_col_name` = ? 
+            AND `app_type_id` = ?  
+            AND `is_success` = ? 
+            AND `device_id` = ? 
             ORDER BY `$this->identify_table_id_col_name` DESC",
-            [$entity_id, 0, $device_id]
+            [$this->entity_id, $this->app_type_id->value, 0, $this->device_id]
         );
     }
 
-    public function devicePendingList(int $entity_id, string $device_id): array
+    public function devicePendingList(): array
     {
         return $this->Rows(
             "`$this->tableName` 
@@ -79,18 +119,20 @@ abstract class DeviceSmsOTP extends DbConnector
             "`$this->tableName`.*",
 
             "`$this->tableName`.`$this->entity_col_name` = ? 
+            AND `$this->tableName`.`app_type_id` = ? 
             AND `$this->tableName`.`is_success` = ?
             AND `$this->tableName`.`device_id` = ? 
             ORDER BY `$this->tableName`.`$this->identify_table_id_col_name` DESC",
 
-            [$entity_id, 0, $device_id]);
+            [$this->entity_id, $this->app_type_id->value, 0, $this->device_id]);
     }
 
     public function lastPending(int $otp_id): array
     {
         return $this->RowThisTable(
             "`$this->identify_table_id_col_name`, `time`, `expiry`",
-            "`$this->entity_col_name` = ? AND `is_success` = ? 
+            "`$this->entity_col_name` = ? 
+            AND `is_success` = ? 
             ORDER BY `$this->identify_table_id_col_name` DESC LIMIT 1",
             [$otp_id, 0]
         );

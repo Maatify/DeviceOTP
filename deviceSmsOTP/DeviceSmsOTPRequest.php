@@ -31,28 +31,29 @@ abstract class DeviceSmsOTPRequest extends DeviceSmsOTP
 
     private array $exist = [];
 
-    public function recordNew(int $entity_id, string $phone, $device_id): void
+    public function recordNew(string $phone): void
     {
-        if ($this->sendSmsValidation($entity_id, $device_id)) {
-            $this->newOtp($entity_id, $device_id, $phone);
+        if ($this->sendSmsValidation()) {
+            $this->newOtp($phone);
         }
     }
 
-    public function newOtp(int $entity_id, string $phone, string $device_id): int
+    public function newOtp(string $phone): int
     {
         if ($code = $this->generateOTP()) {
             if ($this->row_id = $this->Add(
                 [
-                    $this->entity_col_name => $entity_id,
-                    'device_id'            => $device_id,
+                    $this->entity_col_name => $this->entity_id,
+                    'app_type_id'          => $this->app_type_id->value,
+                    'device_id'            => $this->device_id,
                     'code'                 => $this->encryption->Hash(password_hash($code, PASSWORD_DEFAULT)),
                     'time'                 => AppFunctions::CurrentDateTime(),
                     'expiry'               => $this->expiry_time,
                     'is_success'           => 0,
                 ]
             )) {
-                $this->corn_sender->RecordOTP($entity_id, $phone, $code);
-                $this->exist = $this->devicePendingList($entity_id, $device_id);
+                $this->corn_sender->RecordOTP($this->entity_id, $phone, $code);
+                $this->exist = $this->devicePendingList();
 
                 return $this->row_id;
             }
@@ -66,9 +67,9 @@ abstract class DeviceSmsOTPRequest extends DeviceSmsOTP
         return GeneralFunctions::GenerateOTP($this->otp_length);
     }
 
-    private function sendSmsValidation(int $entity_id, string $device_id): bool
+    private function sendSmsValidation(): bool
     {
-        $this->exist = $this->devicePendingList($entity_id, $device_id);
+        $this->exist = $this->devicePendingList();
         $size = sizeof($this->exist);
         if (empty($this->exist)) {
             return true;
@@ -90,11 +91,11 @@ abstract class DeviceSmsOTPRequest extends DeviceSmsOTP
         };
     }
 
-    public function waitingSecond(int $entity_id, string $device_id): int
+    public function waitingSecond(): int
     {
         $size = sizeof($this->exist);
         if (empty($size)) {
-            $exists = $this->devicePendingList($entity_id, $device_id);
+            $exists = $this->devicePendingList();
             $size = sizeof($exists);
             if (empty($size)) {
                 return $this->waitingTime(1) * 6;
