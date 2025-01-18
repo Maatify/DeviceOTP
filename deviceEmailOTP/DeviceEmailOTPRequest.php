@@ -1,29 +1,34 @@
 <?php
 /**
  * @PHP       Version >= 8.0
- * @copyright ©2023 Maatify.dev
+ * @copyright ©2025 Maatify.dev
  * @author    Mohamed Abdulalim (megyptm) <mohamed@maatify.dev>
- * @since     2024-12-11 4:01 AM
+ * @since     2025-01-29 6:38 AM
  * @link      https://www.maatify.dev Maatify.com
  * @link      https://github.com/Maatify/DeviceOTP  view project on GitHub
- * @Maatify   DeviceOTP :: DeviceSmsOTPRequest
+ * @Maatify   DeviceOTP :: DeviceEmailOTPRequest
  */
 
-namespace Maatify\DeviceSmsOTP;
+namespace Maatify\DeviceEmailOTP;
 
 use Maatify\DeviceOtpTrait\DeviceOTPRequestTrait;
 
-abstract class DeviceSmsOTPRequest extends DeviceSmsOTP
+abstract class DeviceEmailOTPRequest extends DeviceEmailOTP
 {
     use DeviceOTPRequestTrait;
-
     public const TRIES_SECOND_CODES = 3; //for wait for second code
     protected int $tries_second_codes = self::TRIES_SECOND_CODES;
 
     public const TRIES_THIRD_CODES = 5; // for wait for third code
     protected int $tries_third_codes = self::TRIES_THIRD_CODES;
 
-    public const TRIES_LAST_CODES = 10; // for wait for third code
+    public const TRIES_FOURTH_CODES = 10; // for wait for fourth code
+    protected int $tries_fourth_codes = self::TRIES_FOURTH_CODES;
+
+    public const TRIES_FIFTH_CODES = 15; // for wait for fourth code
+    protected int $tries_fifth_codes = self::TRIES_FIFTH_CODES;
+
+    public const TRIES_LAST_CODES = 20; // for wait for third code
     protected int $tries_last_codes = self::TRIES_LAST_CODES;
 
     public const OTP_LENGTH = 6;
@@ -31,11 +36,11 @@ abstract class DeviceSmsOTPRequest extends DeviceSmsOTP
 
     private array $exist = [];
 
-    public function newOtp(string $phone): int
+    public function newOtp(string $receiver): int
     {
         if ($code = $this->addCode()) {
 
-            $this->corn_sender->RecordOTP($this->entity_id, $phone, $code);
+            $this->corn_sender->RecordConfirmCode($this->entity_id, $receiver, $code);
             $this->exist = $this->devicePendingList();
 
             return $this->row_id;
@@ -50,7 +55,9 @@ abstract class DeviceSmsOTPRequest extends DeviceSmsOTP
             0 => 0,
             1 => $this->tries_second_codes,
             2 => $this->tries_third_codes,
-            3 => $this->tries_last_codes,
+            3 => $this->tries_fourth_codes,
+            4 => $this->tries_fifth_codes,
+            5 => $this->tries_last_codes,
             default => 1000,
         };
     }

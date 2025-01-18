@@ -1,19 +1,19 @@
 <?php
 /**
  * @PHP       Version >= 8.0
- * @copyright ©2023 Maatify.dev
+ * @copyright ©2025 Maatify.dev
  * @author    Mohamed Abdulalim (megyptm) <mohamed@maatify.dev>
- * @since     2024-12-11 4:22 AM
+ * @since     2025-01-29 6:49 AM
  * @link      https://www.maatify.dev Maatify.com
  * @link      https://github.com/Maatify/DeviceOTP  view project on GitHub
- * @Maatify   DeviceOTP :: DeviceSmsOTPValidation
+ * @Maatify   DeviceOTP :: DeviceEmailOTPValidation
  */
 
-namespace Maatify\DeviceSmsOTP;
+namespace Maatify\DeviceEmailOTP;
 
 use Maatify\DeviceOtpTrait\DeviceOTPValidationTrait;
 
-abstract class DeviceSmsOTPValidation extends DeviceSmsOTP
+abstract class DeviceEmailOTPValidation extends DeviceEmailOTP
 {
     use DeviceOTPValidationTrait;
 }

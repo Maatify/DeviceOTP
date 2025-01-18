@@ -1,7 +1,7 @@
 {
   "name": "maatify/device-otp",
   "description": "Official PHP library for maatify.dev Device OTP handler, known by our team",
-  "version": "2.0.0002",
+  "version": "2.1.0001",
   "license": "proprietary",
   "homepage": "https://github.com/Maatify/",
   "authors": [
@@ -53,7 +53,9 @@
   },
   "autoload": {
     "psr-4": {
-      "Maatify\\DeviceSmsOTP\\" : "deviceSmsOTP/"
+      "Maatify\\DeviceSmsOTP\\" : "deviceSmsOTP/",
+      "Maatify\\DeviceEmailOTP\\" : "deviceEmailOTP/",
+      "Maatify\\DeviceOtpTrait\\" : "deviceOtpTrait/"
     }
   }
 }
