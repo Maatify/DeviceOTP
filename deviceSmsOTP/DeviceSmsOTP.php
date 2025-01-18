@@ -16,7 +16,6 @@ namespace Maatify\DeviceSmsOTP;
 use \App\Assist\Encryptions\SmsOtpEncryption;
 use \App\DB\DBS\DbConnector;
 use Maatify\CronSms\CronRecordInterface;
-use Maatify\CronSms\CronSmsAdminRecord;
 use Maatify\CronSms\CronSmsCustomerRecord;
 
 abstract class DeviceSmsOTP extends DbConnector
