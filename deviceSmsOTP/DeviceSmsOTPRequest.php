@@ -29,19 +29,14 @@ abstract class DeviceSmsOTPRequest extends DeviceSmsOTP
     public const OTP_LENGTH = 6;
     protected int $otp_length = self::OTP_LENGTH;
 
-    private array $exist = [];
-
-    private int $exist_count = 0;
-    private int $all_count_of_day = 0;
-
-
-
     public function newOtp(string $phone): int
     {
         if ($code = $this->addCode()) {
 
             $this->corn_sender->RecordOTP($this->entity_id, $phone, $code);
-            $this->exist ++;
+
+            $this->exist_count++;
+            $this->all_count_of_day ++;
 
             return $this->row_id;
         }

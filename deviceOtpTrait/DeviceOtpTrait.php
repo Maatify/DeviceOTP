@@ -68,7 +68,7 @@ trait DeviceOtpTrait
 
     public function devicePendingList(): array
     {
-        return $this->Rows(
+        $this->exist = $this->Rows(
             "`$this->tableName` 
             LEFT JOIN `$this->tableName` as pending 
                 ON `pending`.`$this->identify_table_id_col_name` > `$this->tableName`.`$this->identify_table_id_col_name` 
@@ -83,7 +83,7 @@ trait DeviceOtpTrait
             AND all_today.`time` < CURDATE() + INTERVAL 1 DAY 
             AND all_today.`$this->entity_col_name` = `$this->tableName`.`$this->entity_col_name` 
             AND all_today.`app_type_id` = `$this->tableName`.`app_type_id` 
-            AND all_today.`device_id` = `$this->tableName`.`device_id`) AS `all_today`",
+            AND all_today.`device_id` = `$this->tableName`.`device_id`) AS `all_today` ",
 
             "`$this->tableName`.`$this->entity_col_name` = ? 
             AND `$this->tableName`.`app_type_id` = ? 
@@ -92,6 +92,15 @@ trait DeviceOtpTrait
             ORDER BY `$this->tableName`.`$this->identify_table_id_col_name` DESC",
 
             [$this->entity_id, $this->app_type_id->value, 0, $this->device_id]);
+
+        if(!empty($this->exist)){
+            $this->exist_count = sizeof($this->exist);
+            if(!empty($this->exist['all_today'])){
+                $this->all_count_of_day = $this->exist['all_today'];
+            }
+        }
+
+        return $this->exist;
     }
 
     public function lastPending(int $otp_id): array

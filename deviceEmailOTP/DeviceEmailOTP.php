@@ -55,6 +55,11 @@ abstract class DeviceEmailOTP extends DbConnector
     protected EnumAppTypeId $app_type_id = EnumAppTypeId::Web;
     protected int $entity_id;
 
+    protected array $exist = [];
+
+    protected int $exist_count = 0;
+    protected int $all_count_of_day = 0;
+
     public function __construct()
     {
         parent::__construct();

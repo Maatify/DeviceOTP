@@ -71,16 +71,15 @@ trait DeviceOTPRequestTrait
 
     public function waitingSecond(): int
     {
-        $size = sizeof($this->exist);
-        if (empty($size)) {
-            $exists = $this->devicePendingList();
-            $size = sizeof($exists);
-            if (empty($size)) {
+        if (empty($this->exist_count)) {
+            $this->exist = $this->devicePendingList();
+            $this->exist_count = sizeof($this->exist);
+            if (empty($this->exist_count)) {
                 return $this->waitingTime(1) * 60;
             }
         }
 
-        return $this->waitingTime($size) * 60;
+        return $this->waitingTime($this->exist_count) * 60;
     }
 
     private function validateSender(int $timesOfSent, string $dateTime): bool

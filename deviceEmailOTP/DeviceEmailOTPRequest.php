@@ -34,15 +34,13 @@ abstract class DeviceEmailOTPRequest extends DeviceEmailOTP
     public const OTP_LENGTH = 6;
     protected int $otp_length = self::OTP_LENGTH;
 
-    private array $exist = [];
-    private int $all_count_of_day = 0;
-
     public function newOtp(string $receiver): int
     {
         if ($code = $this->addCode()) {
 
             $this->corn_sender->RecordConfirmCode($this->entity_id, $receiver, $code);
-            $this->exist ++;
+            $this->exist_count++;
+            $this->all_count_of_day ++;
 
             return $this->row_id;
         }
