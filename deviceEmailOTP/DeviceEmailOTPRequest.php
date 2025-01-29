@@ -40,7 +40,7 @@ abstract class DeviceEmailOTPRequest extends DeviceEmailOTP
 
             $this->corn_sender->RecordConfirmCode($this->entity_id, $receiver, $code);
             $this->exist_count++;
-            $this->all_customer_count_of_day ++;
+            $this->all_count_of_customer_today ++;
 
             return $this->row_id;
         }

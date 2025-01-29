@@ -58,7 +58,7 @@ abstract class DeviceEmailOTP extends DbConnector
     protected array $exist = [];
 
     protected int $exist_count = 0;
-    protected int $all_customer_count_of_day = 0;
+    protected ?int $all_count_of_customer_today = null;
 
     public function __construct()
     {

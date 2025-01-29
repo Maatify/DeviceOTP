@@ -67,6 +67,10 @@ trait DeviceOtpTrait
 
     public function devicePendingList(): array
     {
+        if(is_null($this->all_count_of_customer_today)){
+            $this->allCountOfCustomerToday();
+        }
+
         $this->exist = $this->Rows(
             "`$this->tableName` 
             LEFT JOIN `$this->tableName` as pending 
@@ -87,26 +91,24 @@ trait DeviceOtpTrait
             $this->exist_count = sizeof($this->exist);
         }
 
-        $this->allCustomerSentOfToday();
-
         return $this->exist;
     }
 
     public function getAllCustomerSentOFToday(): int
     {
-        return $this->all_customer_count_of_day;
+        return $this->allCountOfCustomerToday();
     }
 
-    protected function allCustomerSentOfToday(): int
+    protected function allCountOfCustomerToday(): int
     {
-        $this->all_customer_count_of_day = $this->CountThisTableRows(self::IDENTIFY_TABLE_ID_COL_NAME,
+        $this->all_count_of_customer_today = $this->CountThisTableRows(self::IDENTIFY_TABLE_ID_COL_NAME,
         "`time` >= CURDATE() 
             AND `$this->entity_col_name` = ? 
             AND `app_type_id` = ? ",
             [$this->entity_id, $this->app_type_id->value]);
         //            AND all_today.`time` < CURDATE() + INTERVAL 1 DAY
 
-        return $this->all_customer_count_of_day;
+        return $this->all_count_of_customer_today;
     }
 
     public function lastPending(int $otp_id): array
