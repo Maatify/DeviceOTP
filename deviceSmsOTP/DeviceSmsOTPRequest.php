@@ -36,7 +36,7 @@ abstract class DeviceSmsOTPRequest extends DeviceSmsOTP
             $this->corn_sender->RecordOTP($this->entity_id, $phone, $code);
 
             $this->exist_count++;
-            $this->all_count_of_day ++;
+            $this->all_customer_count_of_day ++;
 
             return $this->row_id;
         }

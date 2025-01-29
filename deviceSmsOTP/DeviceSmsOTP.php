@@ -63,8 +63,8 @@ abstract class DeviceSmsOTP extends DbConnector
     protected array $exist = [];
 
     protected int $exist_count = 0;
-    protected int $all_count_of_day = 0;
 
+    protected int $all_customer_count_of_day = 0;
     public function __construct()
     {
         parent::__construct();

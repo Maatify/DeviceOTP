@@ -95,12 +95,31 @@ trait DeviceOtpTrait
 
         if(!empty($this->exist)){
             $this->exist_count = sizeof($this->exist);
-            if(!empty($this->exist['all_today'])){
-                $this->all_count_of_day = $this->exist['all_today'];
-            }
+//            if(!empty($this->exist['all_today'])){
+//                $this->all_count_of_day = $this->exist['all_today'];
+//            }
         }
 
+        $this->allCustomerSentOfToday();
+
         return $this->exist;
+    }
+
+    public function getAllCustomerSentOFToday(): int
+    {
+        return $this->all_customer_count_of_day;
+    }
+
+    protected function allCustomerSentOfToday(): int
+    {
+        $this->all_customer_count_of_day = $this->CountThisTableRows(self::IDENTIFY_TABLE_ID_COL_NAME,
+        "`time` >= CURDATE() 
+            AND all_today.`$this->entity_col_name` = ? 
+            AND all_today.`app_type_id` = ? ",
+            [$this->entity_id, $this->app_type_id->value]);
+        //            AND all_today.`time` < CURDATE() + INTERVAL 1 DAY
+
+        return $this->all_customer_count_of_day;
     }
 
     public function lastPending(int $otp_id): array
