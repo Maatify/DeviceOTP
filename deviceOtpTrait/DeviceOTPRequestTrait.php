@@ -13,11 +13,19 @@
 namespace Maatify\DeviceOtpTrait;
 
 use \App\Assist\AppFunctions;
+use Maatify\AppController\Enums\EnumAppTypeId;
 use Maatify\Functions\GeneralFunctions;
 use Maatify\Json\FunJson;
 
 trait DeviceOTPRequestTrait
 {
+    public function initFromOtherCron(string $entity_id, EnumAppTypeId $app_type_id, string $device_id):static
+    {
+        $this->entity_id = $entity_id;
+        $this->app_type_id = $app_type_id;
+        $this->device_id =  $device_id;
+        return $this;
+    }
 
     private function addCode(): int
     {
@@ -52,9 +60,9 @@ trait DeviceOTPRequestTrait
     private function sendOtpValidation(): bool
     {
         $this->exist = $this->devicePendingList();
-        $size = sizeof($this->exist);
+        $this->exist_count = sizeof($this->exist);
 
-        if (empty($this->exist) || (! empty($this->exist[0]['time']) && $this->validateSender($size, $this->exist[0]['time']))) {
+        if (empty($this->exist) || (! empty($this->exist[0]['time']) && $this->validateSender($this->exist_count, $this->exist[0]['time']))) {
             return true;
         }
 
@@ -68,7 +76,7 @@ trait DeviceOTPRequestTrait
             $exists = $this->devicePendingList();
             $size = sizeof($exists);
             if (empty($size)) {
-                return $this->waitingTime(1) * 6;
+                return $this->waitingTime(1) * 60;
             }
         }
 

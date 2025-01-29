@@ -31,12 +31,17 @@ abstract class DeviceSmsOTPRequest extends DeviceSmsOTP
 
     private array $exist = [];
 
+    private int $exist_count = 0;
+    private int $all_count_of_day = 0;
+
+
+
     public function newOtp(string $phone): int
     {
         if ($code = $this->addCode()) {
 
             $this->corn_sender->RecordOTP($this->entity_id, $phone, $code);
-            $this->exist = $this->devicePendingList();
+            $this->exist ++;
 
             return $this->row_id;
         }

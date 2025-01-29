@@ -20,6 +20,7 @@ trait DeviceOtpTrait
     public function setDeviceId(string $device_id): self
     {
         $this->device_id = $device_id;
+
         return $this;
     }
 
@@ -31,6 +32,7 @@ trait DeviceOtpTrait
     public function setAppTypeId(EnumAppTypeId $appTypeId): self
     {
         $this->app_type_id = $appTypeId;
+
         return $this;
     }
 
@@ -42,8 +44,10 @@ trait DeviceOtpTrait
     public function setEntityId(int $entityId): self
     {
         $this->entity_id = $entityId;
+
         return $this;
     }
+
     public function getEntityId(): int
     {
         return $this->entity_id;
@@ -70,7 +74,16 @@ trait DeviceOtpTrait
                 ON `pending`.`$this->identify_table_id_col_name` > `$this->tableName`.`$this->identify_table_id_col_name` 
                 AND `pending`.`is_success` = '1' ",
 
-            "`$this->tableName`.*",
+            "`$this->tableName`.*, 
+            (SELECT COUNT(*) 
+            
+            FROM `$this->tableName` AS all_today 
+            
+            WHERE all_today.`time` >= CURDATE() 
+            AND all_today.`time` < CURDATE() + INTERVAL 1 DAY 
+            AND all_today.`$this->entity_col_name` = `$this->tableName`.`$this->entity_col_name` 
+            AND all_today.`app_type_id` = `$this->tableName`.`app_type_id` 
+            AND all_today.`device_id` = `$this->tableName`.`device_id`) AS `all_today`",
 
             "`$this->tableName`.`$this->entity_col_name` = ? 
             AND `$this->tableName`.`app_type_id` = ? 
