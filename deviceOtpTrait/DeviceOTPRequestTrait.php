@@ -44,10 +44,10 @@ trait DeviceOTPRequestTrait
 
         return $code;
     }
-    public function recordNew(string $phone): void
+    public function recordNew(string $receiver): void
     {
         if ($this->sendOtpValidation()) {
-            $this->newOtp($phone);
+            $this->newOtp($receiver);
         }
     }
 
