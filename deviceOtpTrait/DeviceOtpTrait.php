@@ -101,8 +101,8 @@ trait DeviceOtpTrait
     {
         $this->all_customer_count_of_day = $this->CountThisTableRows(self::IDENTIFY_TABLE_ID_COL_NAME,
         "`time` >= CURDATE() 
-            AND all_today.`$this->entity_col_name` = ? 
-            AND all_today.`app_type_id` = ? ",
+            AND `$this->entity_col_name` = ? 
+            AND `app_type_id` = ? ",
             [$this->entity_id, $this->app_type_id->value]);
         //            AND all_today.`time` < CURDATE() + INTERVAL 1 DAY
 
