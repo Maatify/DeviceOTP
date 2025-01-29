@@ -60,9 +60,7 @@ trait DeviceOTPRequestTrait
     private function sendOtpValidation(): bool
     {
         $this->exist = $this->devicePendingList();
-        $this->exist_count = sizeof($this->exist);
-
-        if (empty($this->exist) || (! empty($this->exist[0]['time']) && $this->validateSender($this->exist_count, $this->exist[0]['time']))) {
+        if (empty($this->exist) || (! empty($this->exist[0]['time']) && $this->validateSender($this->exist[0]['time']))) {
             return true;
         }
 
@@ -73,7 +71,6 @@ trait DeviceOTPRequestTrait
     {
         if (empty($this->exist_count)) {
             $this->exist = $this->devicePendingList();
-            $this->exist_count = sizeof($this->exist);
             if (empty($this->exist_count)) {
                 return $this->waitingTime(1) * 60;
             }
@@ -82,9 +79,9 @@ trait DeviceOTPRequestTrait
         return $this->waitingTime($this->exist_count) * 60;
     }
 
-    private function validateSender(int $timesOfSent, string $dateTime): bool
+    private function validateSender(string $dateTime): bool
     {
-        $waiting = $this->waitingTime($timesOfSent);
+        $waiting = $this->waitingTime($this->exist_count);
         if ($waiting === 0) {
             return true;
         }
