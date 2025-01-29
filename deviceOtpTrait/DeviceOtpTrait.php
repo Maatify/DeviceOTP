@@ -68,7 +68,7 @@ trait DeviceOtpTrait
     public function devicePendingList(): array
     {
         if(is_null($this->all_count_of_customer_today)){
-            $this->allCountOfCustomerToday();
+            $this->allCountOfCustomerAppToday();
         }
 
         $this->exist = $this->Rows(
@@ -94,12 +94,12 @@ trait DeviceOtpTrait
         return $this->exist;
     }
 
-    public function getAllCustomerSentOFToday(): int
+    public function getAllCustomerAppSentOFToday(): int
     {
-        return $this->allCountOfCustomerToday();
+        return $this->allCountOfCustomerAppToday();
     }
 
-    protected function allCountOfCustomerToday(): int
+    protected function allCountOfCustomerAppToday(): int
     {
         $this->all_count_of_customer_today = $this->CountThisTableRows(self::IDENTIFY_TABLE_ID_COL_NAME,
         "`time` >= CURDATE() 
