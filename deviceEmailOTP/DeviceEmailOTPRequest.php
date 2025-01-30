@@ -11,9 +11,10 @@
 
 namespace Maatify\DeviceEmailOTP;
 
+use Maatify\DeviceOTPContracts\DeviceOTPRequestInterface;
 use Maatify\DeviceOTPTrait\DeviceOTPRequestTrait;
 
-abstract class DeviceEmailOTPRequest extends DeviceEmailOTP
+abstract class DeviceEmailOTPRequest extends DeviceEmailOTP implements DeviceOTPRequestInterface
 {
     use DeviceOTPRequestTrait;
     public const TRIES_SECOND_CODES = 3; //for wait for second code

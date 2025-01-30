@@ -11,9 +11,10 @@
 
 namespace Maatify\DeviceSmsOTP;
 
+use Maatify\DeviceOTPContracts\DeviceOTPRequestInterface;
 use Maatify\DeviceOTPTrait\DeviceOTPRequestTrait;
 
-abstract class DeviceSmsOTPRequest extends DeviceSmsOTP
+abstract class DeviceSmsOTPRequest extends DeviceSmsOTP implements DeviceOTPRequestInterface
 {
     use DeviceOTPRequestTrait;
 
@@ -29,11 +30,11 @@ abstract class DeviceSmsOTPRequest extends DeviceSmsOTP
     public const OTP_LENGTH = 6;
     protected int $otp_length = self::OTP_LENGTH;
 
-    public function newOtp(string $phone): int
+    public function newOtp(string $receiver): int
     {
         if ($code = $this->addCode()) {
 
-            $this->corn_sender->RecordOTP($this->entity_id, $phone, $code);
+            $this->corn_sender->RecordOTP($this->entity_id, $receiver, $code);
 
             $this->exist_count++;
             $this->all_count_of_customer_app_today ++;

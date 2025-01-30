@@ -28,7 +28,6 @@ class DeviceOTPConfirmWay
     private bool $confirm_by_email;
 
     private function __construct(){
-        $this->way = EnumDeviceOTPConfirmWay::SMS;
         $this->confirm_by_sms = !empty($_ENV['CONFIRM_BY_SMS']);
         $this->confirm_by_email = !empty($_ENV['CONFIRM_BY_EMAIL']);
     }
@@ -44,12 +43,13 @@ class DeviceOTPConfirmWay
         return $this->way;
     }
 
-    public function autoSetConfirmWay(DeviceOTPInterface $deviceOTPClass, int $max_numbers): void
+    public function autoSetConfirmWay(DeviceOTPInterface $deviceOTPClass, int $max_numbers): ?EnumDeviceOTPConfirmWay
     {
         if($this->confirm_by_sms && $max_numbers <= $deviceOTPClass->getAllCustomerAppSentOFToday()){
             $this->setConfirmWay(EnumDeviceOTPConfirmWay::SMS);
         }elseif($this->confirm_by_email){
             $this->setConfirmWay(EnumDeviceOTPConfirmWay::EMAIL);
         }
+        return $this->way;
     }
 }
