@@ -6,7 +6,7 @@
  * @since     2025-01-29 6:35 AM
  * @link      https://www.maatify.dev Maatify.com
  * @link      https://github.com/Maatify/DeviceOTP  view project on GitHub
- * @Maatify   DeviceOTP :: DeviceEmailOTPPortal
+ * @Maatify   DeviceOTP :: Maatify\DeviceEmailOTP\DeviceEmailOTPPortal
  */
 
 namespace Maatify\DeviceEmailOTP;

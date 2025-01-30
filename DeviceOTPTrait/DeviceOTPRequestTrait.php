@@ -6,11 +6,11 @@
  * @since     2025-01-29 7:09 AM
  * @link      https://www.maatify.dev Maatify.com
  * @link      https://github.com/Maatify/DeviceOTP  view project on GitHub
- * @Maatify   DeviceOTP :: DeviceSmsOTPRequestTrait
+ * @Maatify   DeviceOTP :: Maatify\DeviceOtpTrait\DeviceSmsOTPRequestTrait
  */
 
 
-namespace Maatify\DeviceOtpTrait;
+namespace Maatify\DeviceOTPTrait;
 
 use \App\Assist\AppFunctions;
 use Maatify\AppController\Enums\EnumAppTypeId;

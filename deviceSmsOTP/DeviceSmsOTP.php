@@ -7,7 +7,7 @@
  * @since     2024-12-11 3:43 AM
  * @link      https://www.maatify.dev Maatify.com
  * @link      https://github.com/Maatify/DeviceOTP  view project on GitHub
- * @Maatify   DeviceOTP :: DeviceSmsOTP
+ * @Maatify   DeviceOTP :: Maatify\DeviceSmsOTP\DeviceSmsOTP
  */
 
 
@@ -19,11 +19,12 @@ use \App\DB\DBS\DbConnector;
 use Maatify\AppController\Enums\EnumAppTypeId;
 use Maatify\CronSms\CronRecordInterface;
 use Maatify\CronSms\CronSmsCustomerRecord;
-use Maatify\DeviceOtpTrait\DeviceOtpTrait;
+use Maatify\DeviceOTPContracts\DeviceOTPInterface;
+use Maatify\DeviceOTPTrait\DeviceOTPTrait;
 
-abstract class DeviceSmsOTP extends DbConnector
+abstract class DeviceSmsOTP extends DbConnector implements DeviceOTPInterface
 {
-    use DeviceOtpTrait;
+    use DeviceOTPTrait;
 
     public const    TABLE_NAME                 = 'ct_sms_otp';
     public const    TABLE_ALIAS                = '';
@@ -64,7 +65,7 @@ abstract class DeviceSmsOTP extends DbConnector
 
     protected int $exist_count = 0;
 
-    protected ?int $all_count_of_customer_today = null;
+    protected ?int $all_count_of_customer_app_today = null;
     public function __construct()
     {
         parent::__construct();

@@ -6,14 +6,14 @@
  * @since     2025-01-29 6:58 AM
  * @link      https://www.maatify.dev Maatify.com
  * @link      https://github.com/Maatify/DeviceOTP  view project on GitHub
- * @Maatify   DeviceOTP :: DeviceOtpTrait
+ * @Maatify   DeviceOTP :: Maatify\DeviceOtpTrait\DeviceOtpTrait
  */
 
-namespace Maatify\DeviceOtpTrait;
+namespace Maatify\DeviceOTPTrait;
 
 use Maatify\AppController\Enums\EnumAppTypeId;
 
-trait DeviceOtpTrait
+trait DeviceOTPTrait
 {
 
     public function setDeviceId(string $device_id): self
@@ -67,7 +67,7 @@ trait DeviceOtpTrait
 
     public function devicePendingList(): array
     {
-        if(is_null($this->all_count_of_customer_today)){
+        if(is_null($this->all_count_of_customer_app_today)){
             $this->allCountOfCustomerAppToday();
         }
 
@@ -101,14 +101,15 @@ trait DeviceOtpTrait
 
     protected function allCountOfCustomerAppToday(): int
     {
-        $this->all_count_of_customer_today = $this->CountThisTableRows(self::IDENTIFY_TABLE_ID_COL_NAME,
-        "`time` >= CURDATE() 
+        if(is_null($this->all_count_of_customer_app_today)) {
+            $this->all_count_of_customer_app_today = $this->CountThisTableRows(self::IDENTIFY_TABLE_ID_COL_NAME,
+                "`time` >= CURDATE() 
             AND `$this->entity_col_name` = ? 
             AND `app_type_id` = ? ",
-            [$this->entity_id, $this->app_type_id->value]);
-        //            AND all_today.`time` < CURDATE() + INTERVAL 1 DAY
+                [$this->entity_id, $this->app_type_id->value]);
+        }
 
-        return $this->all_count_of_customer_today;
+        return $this->all_count_of_customer_app_today;
     }
 
     public function lastPending(int $otp_id): array

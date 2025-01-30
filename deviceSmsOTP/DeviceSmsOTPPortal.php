@@ -6,7 +6,7 @@
  * @since     2024-12-11 3:51 AM
  * @link      https://www.maatify.dev Maatify.com
  * @link      https://github.com/Maatify/DeviceOTP  view project on GitHub
- * @Maatify   DeviceOTP :: DeviceSmsOTPPortal
+ * @Maatify   DeviceOTP :: Maatify\DeviceSmsOTP\DeviceSmsOTPPortal
  */
 
 

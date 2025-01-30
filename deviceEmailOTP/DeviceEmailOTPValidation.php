@@ -6,12 +6,12 @@
  * @since     2025-01-29 6:49 AM
  * @link      https://www.maatify.dev Maatify.com
  * @link      https://github.com/Maatify/DeviceOTP  view project on GitHub
- * @Maatify   DeviceOTP :: DeviceEmailOTPValidation
+ * @Maatify   DeviceOTP :: Maatify\DeviceEmailOTP\DeviceEmailOTPValidation
  */
 
 namespace Maatify\DeviceEmailOTP;
 
-use Maatify\DeviceOtpTrait\DeviceOTPValidationTrait;
+use Maatify\DeviceOTPTrait\DeviceOTPValidationTrait;
 
 abstract class DeviceEmailOTPValidation extends DeviceEmailOTP
 {

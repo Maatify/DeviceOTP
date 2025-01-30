@@ -6,12 +6,12 @@
  * @since     2025-01-29 6:38 AM
  * @link      https://www.maatify.dev Maatify.com
  * @link      https://github.com/Maatify/DeviceOTP  view project on GitHub
- * @Maatify   DeviceOTP :: DeviceEmailOTPRequest
+ * @Maatify   DeviceOTP :: Maatify\DeviceEmailOTP\DeviceEmailOTPRequest
  */
 
 namespace Maatify\DeviceEmailOTP;
 
-use Maatify\DeviceOtpTrait\DeviceOTPRequestTrait;
+use Maatify\DeviceOTPTrait\DeviceOTPRequestTrait;
 
 abstract class DeviceEmailOTPRequest extends DeviceEmailOTP
 {
@@ -40,7 +40,7 @@ abstract class DeviceEmailOTPRequest extends DeviceEmailOTP
 
             $this->corn_sender->RecordConfirmCode($this->entity_id, $receiver, $code);
             $this->exist_count++;
-            $this->all_count_of_customer_today ++;
+            $this->all_count_of_customer_app_today ++;
 
             return $this->row_id;
         }

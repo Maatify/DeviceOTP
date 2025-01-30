@@ -6,12 +6,12 @@
  * @since     2024-12-11 4:01 AM
  * @link      https://www.maatify.dev Maatify.com
  * @link      https://github.com/Maatify/DeviceOTP  view project on GitHub
- * @Maatify   DeviceOTP :: DeviceSmsOTPRequest
+ * @Maatify   DeviceOTP :: Maatify\DeviceSmsOTP\DeviceSmsOTPRequest
  */
 
 namespace Maatify\DeviceSmsOTP;
 
-use Maatify\DeviceOtpTrait\DeviceOTPRequestTrait;
+use Maatify\DeviceOTPTrait\DeviceOTPRequestTrait;
 
 abstract class DeviceSmsOTPRequest extends DeviceSmsOTP
 {
@@ -36,7 +36,7 @@ abstract class DeviceSmsOTPRequest extends DeviceSmsOTP
             $this->corn_sender->RecordOTP($this->entity_id, $phone, $code);
 
             $this->exist_count++;
-            $this->all_count_of_customer_today ++;
+            $this->all_count_of_customer_app_today ++;
 
             return $this->row_id;
         }
