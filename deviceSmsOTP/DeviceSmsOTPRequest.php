@@ -30,21 +30,6 @@ abstract class DeviceSmsOTPRequest extends DeviceSmsOTP implements DeviceOTPRequ
     public const OTP_LENGTH = 6;
     protected int $otp_length = self::OTP_LENGTH;
 
-    public function newOtp(string $receiver): int
-    {
-        if ($code = $this->addCode()) {
-
-            $this->corn_sender->RecordOTP($this->entity_id, $receiver, $code);
-
-            $this->exist_count++;
-            $this->all_count_of_customer_app_today ++;
-
-            return $this->row_id;
-        }
-
-        return 0;
-    }
-
     private function waitingTime(int $timesOfSent): int
     {
         return match ($timesOfSent) {

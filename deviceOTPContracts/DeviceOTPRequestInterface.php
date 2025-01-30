@@ -16,11 +16,11 @@ use Maatify\AppController\Enums\EnumAppTypeId;
 interface DeviceOTPRequestInterface
 {
     // Singleton instance getter
-    public static function obj(): DeviceOTPInterface;
+    public static function obj(): DeviceOTPRequestInterface;
     public function initFromOtherCron(string $entity_id, EnumAppTypeId $app_type_id, string $device_id):static;
     public function recordNew(string $receiver): void;
     public function waitingSecond(): int;
-    public function newOtp(string $receiver): int;
+//    public function newOtp(string $receiver): int;
 //    public function sendOtp(string $receiver): void;
-    public function sendDeviceOtp(): void;
+//    public function sendDeviceOtp(): void;
 }
