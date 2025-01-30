@@ -1,31 +1,28 @@
 <?php
-
 /**
  * @PHP       Version >= 8.0
- * @copyright ©2023 Maatify.dev
+ * @copyright ©2025 Maatify.dev
  * @author    Mohamed Abdulalim (megyptm) <mohamed@maatify.dev>
- * @since     2024-12-11 3:43 AM
+ * @since     2025-01-29 6:34 AM
  * @link      https://www.maatify.dev Maatify.com
  * @link      https://github.com/Maatify/DeviceOTP  view project on GitHub
- * @Maatify   DeviceOTP :: Maatify\DeviceSmsOTP\DeviceSmsOTP
+ * @Maatify   DeviceOTP :: Maatify\DeviceEmailOTP\DeviceEmailOTP
  */
 
+namespace Maatify\DeviceEmailOTP;
 
-namespace Maatify\DeviceSmsOTP;
-
-use \App\Assist\Encryptions\SmsOtpEncryption;
+use App\Assist\Encryptions\EmailOtpEncryption;
 use App\Assist\OpensslEncryption\OpenSslKeys;
 use App\DB\DBS\DbConnector;
 use Maatify\AppController\Enums\EnumAppTypeId;
-use Maatify\CronSms\CronRecordInterface;
-use Maatify\CronSms\CronSmsCustomerRecord;
+use Maatify\CronEmail\CronEmailCustomerRecord;
 use Maatify\DeviceOTPContracts\DeviceOTPInterface;
 use Maatify\DeviceOTPTraits\DeviceOTPTableTrait;
 
-abstract class DeviceSmsOTP extends DbConnector implements DeviceOTPInterface
+abstract class DeviceEmailOTP extends DbConnector implements DeviceOTPInterface
 {
     use DeviceOTPTableTrait;
-    public const    TABLE_NAME                 = 'ct_sms_otp';
+    public const    TABLE_NAME                 = 'ct_email_otp';
     public const    TABLE_ALIAS                = '';
     public const    IDENTIFY_TABLE_ID_COL_NAME = 'otp_id';
     public const    ENTITY_COL_NAME            = 'ct_id';
@@ -54,8 +51,7 @@ abstract class DeviceSmsOTP extends DbConnector implements DeviceOTPInterface
     protected array $cols = self::COLS;
 
     protected OpenSslKeys $encryption;
-    protected CronRecordInterface $corn_sender;
-
+    protected CronEmailCustomerRecord $corn_sender;
     protected string $device_id;
     protected EnumAppTypeId $app_type_id = EnumAppTypeId::Web;
     protected int $entity_id;
@@ -63,13 +59,12 @@ abstract class DeviceSmsOTP extends DbConnector implements DeviceOTPInterface
     protected array $exist = [];
 
     protected int $exist_count = 0;
-
     protected ?int $all_count_of_customer_app_today = null;
 
     public function __construct()
     {
         parent::__construct();
-        $this->encryption = new SmsOtpEncryption();
-        $this->corn_sender = new CronSmsCustomerRecord();
+        $this->encryption = new EmailOtpEncryption();
+        $this->corn_sender = new CronEmailCustomerRecord();
     }
 }

@@ -1,30 +1,29 @@
 <?php
 /**
  * @PHP       Version >= 8.0
- * @copyright ©2023 Maatify.dev
+ * @copyright ©2025 Maatify.dev
  * @author    Mohamed Abdulalim (megyptm) <mohamed@maatify.dev>
- * @since     2024-12-11 3:51 AM
+ * @since     2025-01-29 6:35 AM
  * @link      https://www.maatify.dev Maatify.com
  * @link      https://github.com/Maatify/DeviceOTP  view project on GitHub
- * @Maatify   DeviceOTP :: Maatify\DeviceSmsOTP\DeviceSmsOTPPortal
+ * @Maatify   DeviceOTP :: Maatify\DeviceEmailOTP\DeviceEmailOTPPortal
  */
 
-
-namespace Maatify\DeviceSmsOTP;
+namespace Maatify\DeviceEmailOTP;
 
 use Maatify\Portal\DbHandler\ParentClassHandler;
 use Maatify\PostValidatorV2\ValidatorConstantsTypes;
 use Maatify\PostValidatorV2\ValidatorConstantsValidators;
 
-abstract class DeviceSmsOTPPortal extends ParentClassHandler
+abstract class DeviceEmailOTPPortal extends ParentClassHandler
 {
-    public const IDENTIFY_TABLE_ID_COL_NAME = DeviceSmsOTP::IDENTIFY_TABLE_ID_COL_NAME;
-    public const ENTITY_COL_NAME            = DeviceSmsOTP::ENTITY_COL_NAME;
-    public const TABLE_NAME                 = DeviceSmsOTP::TABLE_NAME;
-    public const TABLE_ALIAS                = DeviceSmsOTP::TABLE_ALIAS;
-    public const LOGGER_TYPE                = DeviceSmsOTP::LOGGER_TYPE;
-    public const LOGGER_SUB_TYPE            = DeviceSmsOTP::LOGGER_SUB_TYPE;
-    public const COLS                       = DeviceSmsOTP::COLS;
+    public const IDENTIFY_TABLE_ID_COL_NAME = DeviceEmailOTP::IDENTIFY_TABLE_ID_COL_NAME;
+    public const ENTITY_COL_NAME            = DeviceEmailOTP::ENTITY_COL_NAME;
+    public const TABLE_NAME                 = DeviceEmailOTP::TABLE_NAME;
+    public const TABLE_ALIAS                = DeviceEmailOTP::TABLE_ALIAS;
+    public const LOGGER_TYPE                = DeviceEmailOTP::LOGGER_TYPE;
+    public const LOGGER_SUB_TYPE            = DeviceEmailOTP::LOGGER_SUB_TYPE;
+    public const COLS                       = DeviceEmailOTP::COLS;
     public const IMAGE_FOLDER               = self::TABLE_NAME;
 
     protected string $identify_table_id_col_name = self::IDENTIFY_TABLE_ID_COL_NAME;
