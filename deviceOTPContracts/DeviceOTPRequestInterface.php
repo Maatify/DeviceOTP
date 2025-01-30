@@ -20,7 +20,4 @@ interface DeviceOTPRequestInterface
     public function initFromOtherCron(string $entity_id, EnumAppTypeId $app_type_id, string $device_id):static;
     public function recordNew(string $receiver): void;
     public function waitingSecond(): int;
-//    public function newOtp(string $receiver): int;
-//    public function sendOtp(string $receiver): void;
-//    public function sendDeviceOtp(): void;
 }

@@ -12,6 +12,8 @@
 namespace Maatify\DeviceOTP;
 
 use Maatify\DeviceOTPContracts\DeviceOTPInterface;
+use Maatify\DeviceOTPContracts\DeviceOTPRequestInterface;
+use Maatify\DeviceOTPContracts\DeviceOTPValidationInterface;
 
 class DeviceOTPConfirmWay
 {
@@ -43,7 +45,7 @@ class DeviceOTPConfirmWay
         return $this->way;
     }
 
-    public function autoSetConfirmWay(DeviceOTPInterface $deviceOTPClass, int $max_numbers): ?EnumDeviceOTPConfirmWay
+    public function autoSetConfirmWay(DeviceOTPRequestInterface|DeviceOTPValidationInterface $deviceOTPClass, int $max_numbers): ?EnumDeviceOTPConfirmWay
     {
         if($this->confirm_by_sms && $max_numbers <= $deviceOTPClass->getAllCustomerAppSentOFToday()){
             $this->setConfirmWay(EnumDeviceOTPConfirmWay::SMS);

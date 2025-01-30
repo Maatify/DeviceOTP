@@ -15,17 +15,13 @@ namespace Maatify\DeviceSmsOTP;
 
 use \App\Assist\Encryptions\SmsOtpEncryption;
 use App\Assist\OpensslEncryption\OpenSslKeys;
-use \App\DB\DBS\DbConnector;
+use App\DB\DBS\DbConnector;
 use Maatify\AppController\Enums\EnumAppTypeId;
 use Maatify\CronSms\CronRecordInterface;
 use Maatify\CronSms\CronSmsCustomerRecord;
-use Maatify\DeviceOTPContracts\DeviceOTPInterface;
-use Maatify\DeviceOTPTraits\DeviceOTPTableTrait;
 
-abstract class DeviceSmsOTP extends DbConnector implements DeviceOTPInterface
+abstract class DeviceSmsOTP extends DbConnector
 {
-    use DeviceOTPTableTrait;
-
     public const    TABLE_NAME                 = 'ct_sms_otp';
     public const    TABLE_ALIAS                = '';
     public const    IDENTIFY_TABLE_ID_COL_NAME = 'otp_id';
@@ -66,6 +62,7 @@ abstract class DeviceSmsOTP extends DbConnector implements DeviceOTPInterface
     protected int $exist_count = 0;
 
     protected ?int $all_count_of_customer_app_today = null;
+
     public function __construct()
     {
         parent::__construct();

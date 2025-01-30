@@ -14,7 +14,7 @@ namespace Maatify\DeviceSmsOTP;
 use Maatify\DeviceOTPContracts\DeviceOTPValidationInterface;
 use Maatify\DeviceOTPTraits\DeviceOTPValidationTrait;
 
-abstract class DeviceSmsOTPValidation extends DeviceSmsOTP implements DeviceOTPValidationInterface
+abstract class DeviceSmsOTPValidation extends DeviceSmsOTPTable implements DeviceOTPValidationInterface
 {
     use DeviceOTPValidationTrait;
 }
