@@ -21,4 +21,5 @@ interface DeviceOTPRequestInterface
     public function recordNew(string $receiver): void;
     public function waitingSecond(): int;
     public function newOtp(string $receiver): int;
+    public function sendDeviceOtp(): void;
 }
