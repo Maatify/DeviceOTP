@@ -16,7 +16,7 @@ use Maatify\AppController\Enums\EnumAppTypeId;
 interface DeviceOTPRequestInterface
 {
     // Singleton instance getter
-    public static function obj(): self;
+    public static function obj(): static;
     public function initFromOtherCron(string $entity_id, EnumAppTypeId $app_type_id, string $device_id):static;
     public function recordNew(string $receiver): void;
     public function waitingSecond(): int;

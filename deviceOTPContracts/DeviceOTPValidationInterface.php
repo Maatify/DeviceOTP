@@ -14,6 +14,6 @@ namespace Maatify\DeviceOTPContracts;
 interface DeviceOTPValidationInterface
 {
     // Singleton instance getter
-    public static function obj(): self;
+    public static function obj(): static;
     public function validate(string $code): array;
 }

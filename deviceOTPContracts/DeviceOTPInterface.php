@@ -16,7 +16,7 @@ use Maatify\AppController\Enums\EnumAppTypeId;
 interface DeviceOTPInterface
 {
     // Singleton instance getter
-    public static function obj(): self;
+    public static function obj(): static;
     public function setDeviceId(string $device_id): self;
     public function getDeviceId(): string;
     public function setAppTypeId(EnumAppTypeId $appTypeId): self;
