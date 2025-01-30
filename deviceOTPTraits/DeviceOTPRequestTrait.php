@@ -105,7 +105,7 @@ trait DeviceOTPRequestTrait
         return false;
     }
 
-    protected function sendOtp(string $receiver): void
+    public function sendOtp(string $receiver): void
     {
         $this->recordNew($receiver);
     }
