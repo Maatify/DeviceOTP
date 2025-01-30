@@ -55,7 +55,7 @@
     "psr-4": {
       "Maatify\\DeviceSmsOTP\\" : "deviceSmsOTP/",
       "Maatify\\DeviceEmailOTP\\" : "deviceEmailOTP/",
-      "Maatify\\DeviceOTPTraits\\" : "DeviceOTPTraits/",
+      "Maatify\\DeviceOTPTraits\\" : "deviceOTPTraits/",
       "Maatify\\DeviceOTP\\" : "deviceOTP/",
       "Maatify\\DeviceOTPContracts\\" : "deviceOTPContracts/"
     }
