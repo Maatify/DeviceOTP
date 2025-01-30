@@ -11,10 +11,10 @@
 
 namespace Maatify\DeviceEmailOTP;
 
-use Maatify\DeviceOTPContracts\DeviceOTPRequestInterface;
 use Maatify\DeviceOTPTraits\DeviceOTPRequestTrait;
+use Maatify\Portal\DbHandler\ParentClassHandler;
 
-abstract class DeviceEmailOTPRequest extends DeviceEmailOTP implements DeviceOTPRequestInterface
+abstract class DeviceEmailOTPRequest extends ParentClassHandler
 {
     use DeviceOTPRequestTrait;
     public const TRIES_SECOND_CODES = 3; //for wait for second code

@@ -11,11 +11,11 @@
 
 namespace Maatify\DeviceEmailOTP;
 
-use Maatify\DeviceSmsOTP\DeviceSmsOTPPortal;
+use Maatify\Portal\DbHandler\ParentClassHandler;
 use Maatify\PostValidatorV2\ValidatorConstantsTypes;
 use Maatify\PostValidatorV2\ValidatorConstantsValidators;
 
-abstract class DeviceEmailOTPPortal extends DeviceSmsOTPPortal
+abstract class DeviceEmailOTPPortal extends ParentClassHandler
 {
     public const IDENTIFY_TABLE_ID_COL_NAME = DeviceEmailOTP::IDENTIFY_TABLE_ID_COL_NAME;
     public const ENTITY_COL_NAME            = DeviceEmailOTP::ENTITY_COL_NAME;

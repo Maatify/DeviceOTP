@@ -11,20 +11,9 @@
 
 namespace Maatify\DeviceOTPContracts;
 
-use Maatify\AppController\Enums\EnumAppTypeId;
-
 interface DeviceOTPInterface
 {
     // Singleton instance getter
     public static function obj(): DeviceOTPInterface;
-    public function setDeviceId(string $device_id): self;
-    public function getDeviceId(): string;
-    public function setAppTypeId(EnumAppTypeId $appTypeId): self;
-    public function getAppTypeId(): EnumAppTypeId;
-    public function setEntityId(int $entityId): self;
-    public function getEntityId(): int;
-    public function pendingList(): array;
-    public function devicePendingList(): array;
     public function getAllCustomerAppSentOFToday(): int;
-    public function lastPending(int $otp_id): array;
 }

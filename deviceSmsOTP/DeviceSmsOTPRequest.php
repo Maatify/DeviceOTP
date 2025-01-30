@@ -11,10 +11,9 @@
 
 namespace Maatify\DeviceSmsOTP;
 
-use Maatify\DeviceOTPContracts\DeviceOTPRequestInterface;
 use Maatify\DeviceOTPTraits\DeviceOTPRequestTrait;
 
-abstract class DeviceSmsOTPRequest extends DeviceSmsOTP implements DeviceOTPRequestInterface
+abstract class DeviceSmsOTPRequest extends DeviceSmsOTP
 {
     use DeviceOTPRequestTrait;
 

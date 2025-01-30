@@ -11,10 +11,9 @@
 
 namespace Maatify\DeviceEmailOTP;
 
-use Maatify\DeviceOTPContracts\DeviceOTPValidationInterface;
 use Maatify\DeviceOTPTraits\DeviceOTPValidationTrait;
 
-abstract class DeviceEmailOTPValidation extends DeviceEmailOTP implements DeviceOTPValidationInterface
+abstract class DeviceEmailOTPValidation extends DeviceEmailOTP
 {
     use DeviceOTPValidationTrait;
 }
