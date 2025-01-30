@@ -12,7 +12,7 @@
 namespace Maatify\DeviceEmailOTP;
 
 use Maatify\DeviceOTPContracts\DeviceOTPRequestInterface;
-use Maatify\DeviceOTPTrait\DeviceOTPRequestTrait;
+use Maatify\DeviceOTPTraits\DeviceOTPRequestTrait;
 
 abstract class DeviceEmailOTPRequest extends DeviceEmailOTP implements DeviceOTPRequestInterface
 {

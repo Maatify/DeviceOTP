@@ -17,11 +17,11 @@ use App\DB\DBS\DbConnector;
 use Maatify\AppController\Enums\EnumAppTypeId;
 use Maatify\CronEmail\CronEmailCustomerRecord;
 use Maatify\DeviceOTPContracts\DeviceOTPInterface;
-use Maatify\DeviceOTPTrait\DeviceOTPTrait;
+use Maatify\DeviceOTPTraits\DeviceOTPTableTrait;
 
 abstract class DeviceEmailOTP extends DbConnector implements DeviceOTPInterface
 {
-    use DeviceOTPTrait;
+    use DeviceOTPTableTrait;
     public const    TABLE_NAME                 = 'ct_email_otp';
     public const    TABLE_ALIAS                = '';
     public const    IDENTIFY_TABLE_ID_COL_NAME = 'otp_id';

@@ -20,11 +20,11 @@ use Maatify\AppController\Enums\EnumAppTypeId;
 use Maatify\CronSms\CronRecordInterface;
 use Maatify\CronSms\CronSmsCustomerRecord;
 use Maatify\DeviceOTPContracts\DeviceOTPInterface;
-use Maatify\DeviceOTPTrait\DeviceOTPTrait;
+use Maatify\DeviceOTPTraits\DeviceOTPTableTrait;
 
 abstract class DeviceSmsOTP extends DbConnector implements DeviceOTPInterface
 {
-    use DeviceOTPTrait;
+    use DeviceOTPTableTrait;
 
     public const    TABLE_NAME                 = 'ct_sms_otp';
     public const    TABLE_ALIAS                = '';

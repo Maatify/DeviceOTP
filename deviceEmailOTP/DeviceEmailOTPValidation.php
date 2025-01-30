@@ -12,7 +12,7 @@
 namespace Maatify\DeviceEmailOTP;
 
 use Maatify\DeviceOTPContracts\DeviceOTPValidationInterface;
-use Maatify\DeviceOTPTrait\DeviceOTPValidationTrait;
+use Maatify\DeviceOTPTraits\DeviceOTPValidationTrait;
 
 abstract class DeviceEmailOTPValidation extends DeviceEmailOTP implements DeviceOTPValidationInterface
 {
