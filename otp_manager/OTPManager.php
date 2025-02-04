@@ -16,6 +16,9 @@ namespace Maatify\OTPManager;
 namespace Maatify\OTPManager;
 
 use App\Assist\Encryptions\OTPEncryption;
+use Maatify\Functions\GeneralFunctions;
+use Maatify\Logger\Logger;
+use Random\RandomException;
 
 class OTPManager {
     private OTPRepository $otpRepository;
@@ -36,19 +39,21 @@ class OTPManager {
         if ($this->roleChecker->hasTooManyPendingOTPsForRole($recipientId)) {
             return [
                 'status' => 'error',
-                'code' => 'E002',
-                'message' => 'Too many pending OTP requests for this role.',
+                'code' => 429,
+                'error' => 'E002',
+                'message' => 'Too many pending OTP requests for this recipient.',
                 'waiting_seconds' => 0,
-                ];
+            ];
         }
 
         if ($this->roleChecker->hasTooManyPendingOTPs($recipientId, $deviceId)) {
             return [
                 'status' => 'error',
-                'code' => 'E001',
+                'code' => 430,
+                'error' => 'E001',
                 'message' => 'Too many pending OTP requests for this device.',
                 'waiting_seconds' => 0,
-                ];
+            ];
         }
 
         $retryAttempt = $this->retryHandler->getRetryAttempt($recipientId, $deviceId);
@@ -58,13 +63,20 @@ class OTPManager {
         if ($lastRequestTime && !$canRetry) {
             return [
                 'status' => 'error',
-                'code' => 'E004',
+                'code' => 400,
+                'error' => 'E004',
                 'message' => "Please wait $timeLeft seconds before retrying.",
                 'waiting_seconds' => $timeLeft,
-                ];
+            ];
         }
 
-        $otpCode = (string) random_int(100000, 999999);
+        try {
+            $otpCode = (string) random_int(100000, 999999);
+        } catch (RandomException $e) {
+            Logger::RecordLog($e, 'OTPManagerException');
+            $otpCode = GeneralFunctions::GenerateOTP(6);
+        }
+
         $otpCodeHashed = (new OTPEncryption())->hashOTP($otpCode);
 //        $expiry = 180; // Example fixed expiry
         $this->otpRepository->insertOTP($recipientId, $deviceId, $otpCodeHashed, $this->expiry_of_code);
@@ -76,6 +88,7 @@ class OTPManager {
             'code' => 200,
             'otp' => $otpCode,
             'expiry' => $this->expiry_of_code,
+            'message' => "OTP Sent, Please wait $timeLeft seconds before retrying.",
             'waiting_seconds' => $timeLeft];
     }
 
