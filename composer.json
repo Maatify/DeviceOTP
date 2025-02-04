@@ -1,7 +1,7 @@
 {
   "name": "maatify/device-otp",
   "description": "Official PHP library for maatify.dev Device OTP handler, known by our team",
-  "version": "2.1.0025",
+  "version": "3.0.0001",
   "license": "proprietary",
   "homepage": "https://github.com/Maatify/",
   "authors": [
@@ -38,26 +38,23 @@
   ],
   "config": {
     "platform": {
-      "php": "8.1"
+      "php": "8.2"
     }
   },
   "require": {
-    "php": ">=8.1",
+    "php": ">=8.2",
     "maatify/open-ssl": "^1.0",
     "ext-openssl": "*",
     "maatify/json": "^1.0",
     "maatify/functions": "^1.0",
-    "maatify/db-model-v3": "^1.2",
     "maatify/cron-sms": "^1.0",
-    "maatify/app-handler": "^2.0"
+    "maatify/app-handler": "^2.0",
+    "ext-pdo": "*",
+    "maatify/db-model-v3": "^1.2"
   },
   "autoload": {
     "psr-4": {
-      "Maatify\\DeviceSmsOTP\\" : "deviceSmsOTP/",
-      "Maatify\\DeviceEmailOTP\\" : "deviceEmailOTP/",
-      "Maatify\\DeviceOTPTraits\\" : "deviceOTPTraits/",
-      "Maatify\\DeviceOTP\\" : "deviceOTP/",
-      "Maatify\\DeviceOTPContracts\\" : "deviceOTPContracts/"
+      "Maatify\\OTPManager\\" : "otp_manager/"
     }
   }
 }
