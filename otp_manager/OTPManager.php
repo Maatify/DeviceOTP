@@ -101,15 +101,20 @@ class OTPManager {
                 'code'    => 200,
                 'message' => "Successfully verified the OTP.",
             ],
+            410 => [
+                'status'  => 'error',
+                'code'    => 410,
+                'message' => "Expired OTP code.",
+            ],
             401 => [
                 'status'  => 'error',
                 'code'    => 401,
-                'message' => "Expired OTP code.",
+                'message' => "Invalid OTP code.",
             ],
             default => [
                 'status'  => 'error',
                 'code'    => 404,
-                'message' => "Invalid/Not Found OTP code.",
+                'message' => "Not Found OTP code.",
             ],
         };
     }
