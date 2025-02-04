@@ -21,11 +21,13 @@ class OTPManager {
     private OTPRepository $otpRepository;
     private OTPRoleChecker $roleChecker;
     private OTPRetryHandler $retryHandler;
+    private int $expiry_of_code;
 
-    public function __construct(OTPRepository $otpRepository, OTPRoleChecker $roleChecker, OTPRetryHandler $retryHandler) {
+    public function __construct(OTPRepository $otpRepository, OTPRoleChecker $roleChecker, OTPRetryHandler $retryHandler, int $expiry_of_code = 180) {
         $this->otpRepository = $otpRepository;
         $this->roleChecker = $roleChecker;
         $this->retryHandler = $retryHandler;
+        $this->expiry_of_code = $expiry_of_code;
     }
 
     public function requestOTP(int $recipientId, string $deviceId): array {
@@ -64,8 +66,8 @@ class OTPManager {
 
         $otpCode = (string) random_int(100000, 999999);
         $otpCodeHashed = (new OTPEncryption())->hashOTP($otpCode);
-        $expiry = 180; // Example fixed expiry
-        $this->otpRepository->insertOTP($recipientId, $deviceId, $otpCodeHashed, $expiry);
+//        $expiry = 180; // Example fixed expiry
+        $this->otpRepository->insertOTP($recipientId, $deviceId, $otpCodeHashed, $this->expiry_of_code);
 
         $timeLeft = $this->retryHandler->successTimeLeft($retryAttempt);
 
@@ -73,7 +75,7 @@ class OTPManager {
             'status' => 'success',
             'code' => 200,
             'otp' => $otpCode,
-            'expiry' => $expiry,
+            'expiry' => $this->expiry_of_code,
             'waiting_seconds' => $timeLeft];
     }
 

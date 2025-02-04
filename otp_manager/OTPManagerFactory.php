@@ -33,7 +33,8 @@ class OTPManagerFactory
             300,    // Third retry requires 10 minutes wait
         ],
         int $maxRolePendingOTPs = 5,   //10 role-specific limits
-        $maxTimeForDenied = 6000,
+        int $maxTimeForDenied = 6000,
+        int $expiry_of_code = 180,
     ): OTPManager
     {
         // Instantiate repository and handlers
@@ -55,6 +56,6 @@ class OTPManagerFactory
         $otpRoleChecker = new OTPRoleChecker(sizeof($retryDelays), $maxRolePendingOTPs, $otpRepository);
 
         // Return fully constructed OTPManager
-        return new OTPManager($otpRepository, $otpRoleChecker, $otpRetryHandler);
+        return new OTPManager($otpRepository, $otpRoleChecker, $otpRetryHandler, $expiry_of_code);
     }
 }
