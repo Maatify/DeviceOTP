@@ -200,7 +200,17 @@ class OTPRepository
             ':otp_sender_type_id' => $this->otpSenderTypeId->value,
         ]);
 
-        while ($otpRow = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+        // Fetch the first row
+        $otpRow = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Check if no rows were returned
+        if (!$otpRow) {
+            return 404;  // No matching OTP found
+        }
+
+        // Loop through the result set if the first row exists
+        do {
             if ((new OTPEncryption())->confirmOTP($otpCode, $otpRow['code'])) {
                 if ($otpRow['elapsed_time'] <= $otpRow['expiry']) {
                     // Mark this specific OTP as used
@@ -208,14 +218,16 @@ class OTPRepository
                     $updateStmt->execute([':otp_id' => $otpRow['otp_id']]);
 
                     return 200;
+                } else {
+                    // Expired Code
+                    return 410;
                 }
-            }else{
-                return 401;
             }
-        }
+        } while ($otpRow = $stmt->fetch(PDO::FETCH_ASSOC));  // Continue fetching rows
 
-        // If no matching and valid OTP was found
-        return 404;
+
+        // If no valid OTP was found after looping through
+        return 401;
     }
 
 }
