@@ -8,8 +8,9 @@
  * @see         https://www.maatify.dev Maatify.com
  * @link        https://github.com/Maatify/DeviceOTP  view project on GitHub
  * @link        https://github.com/Maatify/AppHandler  (maatify/app-handler)
+ * @link        https://github.com/Maatify/Logger  (maatify/logger)
  * @note        This Project using for OTP with MYSQL PDO (PDO_MYSQL).
- * @note        This Project extends other libraries maatify/app-handler.
+ * @note        This Project extends other libraries maatify/app-handler and maatify/logger.
  *
  * @note        This program is distributed in the hope that it will be useful - WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
