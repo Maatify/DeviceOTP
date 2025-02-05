@@ -98,21 +98,25 @@ class OTPManager {
             'waiting_seconds' => $timeLeft];
     }
 
-    public function isCodePendingExist(int $recipientId, string $deviceId = ''): bool
+    public function isCodePendingExist(int $recipientId, string $deviceId = ''): array
     {
         if ($this->roleChecker->hasTooManyPendingOTPsForRole($recipientId)) {
-            return true;
+            return ['pending' => true, 'waiting_seconds' => 0];
         }
+
         if ($this->roleChecker->hasTooManyPendingOTPs($recipientId, $deviceId)) {
-            return true;
+            return ['pending' => true, 'waiting_seconds' => 0];
         }
+
         $retryAttempt = $this->retryHandler->getRetryAttempt($recipientId, $deviceId);
         $lastRequestTime = $this->otpRepository->getLastRequestTime($recipientId, $deviceId);
         $canRetry = $this->retryHandler->canRetry($retryAttempt, $lastRequestTime);
+
         if ($lastRequestTime && !$canRetry) {
-            return true;
+            return ['pending' => true, 'waiting_seconds' => $this->retryHandler->getTimeLeft()];
         }
-        return false;
+
+        return ['pending' => false, 'waiting_seconds' => 0];
     }
 
     public function confirmOTP(int $recipientId, string $otpCode, string $deviceId = ''): array {

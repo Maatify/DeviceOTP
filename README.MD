@@ -22,7 +22,8 @@
     - [1. Instantiate the OTP Manager using the Factory](#1-instantiate-the-otp-manager-using-the-factory)
     - [2. Requesting an OTP](#2-requesting-an-otp)
     - [3. Confirming an OTP](#3-confirming-an-otp)
-    - [4. Troubleshooting Common Issues](#4-troubleshooting-common-issues)
+    - [4. Check for Pending OTP Requests If its need](#4-check-for-pending-otp-requests-if-its-need)
+    - [5. Troubleshooting Common Issues](#5-troubleshooting-common-issues)
 - [Configuration](#configuration)
 - [Architecture Overview](#architecture-overview)
 - [Error Codes](#error-codes)
@@ -133,7 +134,50 @@ if ($response['status'] === 'success') {
 }
 ```
 
-### **4. Troubleshooting Common Issues**
+### **4. Check for Pending OTP Requests If its need
+
+The `isCodePendingExist()` method helps you determine if a new OTP can be sent or if the user needs to wait.
+
+```php
+$result = $otpManager->isCodePendingExist($recipientId, $deviceId);
+
+if ($result['pending']) {
+    echo "Please wait {$result['waiting_seconds']} seconds before requesting a new OTP.";
+} else {
+    // Proceed to send a new OTP
+    $response = $otpManager->requestOTP($recipientId, $deviceId);
+    echo $response['message'];
+}
+```
+
+#### **Response Examples:**
+
+#### 1. **When the user needs to wait**
+```json
+{
+    "pending": true,
+    "waiting_seconds": 120
+}
+```
+
+#### 2. **When the user can't request a new OTP**
+```json
+{
+    "pending": true,
+    "waiting_seconds": 0
+}
+```
+
+#### 3. **When the user can request a new OTP**
+```json
+{
+    "pending": false,
+    "waiting_seconds": 0
+}
+```
+---
+
+### **5. Troubleshooting Common Issues**
 Here are solutions to some common issues when using the OTP Manager:
 - [Error Code 429 or 430 (Too Many Requests)](#error-code-429-or-430-too-many-requests)
 - [OTP Verification Fails with 401 (Invalid OTP)](#otp-verification-fails-with-401-invalid-otp)
