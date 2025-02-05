@@ -11,21 +11,22 @@
 
 declare(strict_types=1);
 
-namespace Maatify\OTPManager;
-class OTPRetryHandler {
+namespace Maatify\OTPDeviceManager;
+
+class OTPAppDeviceRetryHandler {
     private array $retryDelays;
-    private OTPRepository $otpRepository;
+    private OTPAppDeviceRepository $otpDeviceRepository;
 
     private int $timeLeft = 0;
     private int $maxTimeForDenied;
-    public function __construct(array $retryDelays, OTPRepository $otpRepository, int $maxTimeForDenied = 6000) {
+    public function __construct(array $retryDelays, OTPAppDeviceRepository $otpRepository, int $maxTimeForDenied = 6000) {
         $this->retryDelays = $retryDelays;
-        $this->otpRepository = $otpRepository;
+        $this->otpDeviceRepository = $otpRepository;
         $this->maxTimeForDenied = $maxTimeForDenied;
     }
 
     public function getRetryAttempt(int $recipientId, string $deviceId): int {
-        $pendingOTPs = $this->otpRepository->countPendingOTPs($recipientId, $deviceId);
+        $pendingOTPs = $this->otpDeviceRepository->countPendingOTPs($recipientId, $deviceId);
         return max($pendingOTPs, 0);  // Ensure retry attempt is always at least 1
     }
 

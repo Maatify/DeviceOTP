@@ -11,24 +11,24 @@
 
 declare(strict_types=1);
 
-namespace Maatify\OTPManager;
+namespace Maatify\OTPDeviceManager;
 
-class OTPRoleChecker {
+class OTPAppDeviceRoleChecker {
     private int $maxDevicePendingOTPs;
     private int $maxRolePendingOTPs;
-    private OTPRepository $otpRepository;
+    private OTPAppDeviceRepository $otpDeviceRepository;
 
-    public function __construct(int $maxDevicePendingOTPs, int $maxRolePendingOTPs, OTPRepository $otpRepository) {
+    public function __construct(int $maxDevicePendingOTPs, int $maxRolePendingOTPs, OTPAppDeviceRepository $otpRepository) {
         $this->maxDevicePendingOTPs = $maxDevicePendingOTPs;
         $this->maxRolePendingOTPs = $maxRolePendingOTPs;
-        $this->otpRepository = $otpRepository;
+        $this->otpDeviceRepository = $otpRepository;
     }
 
     public function hasTooManyPendingOTPs(int $recipientId, string $deviceId): bool {
-        return $this->otpRepository->countPendingOTPs($recipientId, $deviceId) >= $this->maxDevicePendingOTPs;
+        return $this->otpDeviceRepository->countPendingOTPs($recipientId, $deviceId) >= $this->maxDevicePendingOTPs;
     }
 
     public function hasTooManyPendingOTPsForRole(int $recipientId): bool {
-        return $this->otpRepository->countPendingOTPsForRole($recipientId) >= $this->maxRolePendingOTPs;
+        return $this->otpDeviceRepository->countPendingOTPsForRole($recipientId) >= $this->maxRolePendingOTPs;
     }
 }

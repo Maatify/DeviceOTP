@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Maatify\OTPManager;
+namespace Maatify\OTPDeviceManager;
 
 use App\Assist\Encryptions\OTPEncryption;
 use Maatify\AppController\Enums\EnumAppTypeId;
@@ -19,7 +19,7 @@ use Maatify\OTPManager\Enums\OtpSenderTypeIdEnum;
 use Maatify\OTPManager\Enums\RecipientTypeIdEnum;
 use PDO;
 
-class OTPRepository
+class OTPAppDeviceRepository
 {
     private PDO $pdo;
     private string $tableName;
