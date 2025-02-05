@@ -134,7 +134,7 @@ if ($response['status'] === 'success') {
 }
 ```
 
-### 4. **Check for Pending OTP Requests If its need
+### 4. **Check for Pending OTP Requests If its need**
 
 The `isCodePendingExist()` method helps you determine if a new OTP can be sent or if the user needs to wait.
 
