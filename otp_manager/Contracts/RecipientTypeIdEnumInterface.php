@@ -24,6 +24,7 @@ namespace Maatify\OTPManager\Contracts;
 
 interface RecipientTypeIdEnumInterface
 {
+    public static function validate(int $type_id): ?self;
     public function getValue(): int;
 
     public function getName(): string;

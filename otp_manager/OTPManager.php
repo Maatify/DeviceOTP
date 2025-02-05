@@ -21,9 +21,9 @@ declare(strict_types=1);
 
 namespace Maatify\OTPManager;
 
-use App\Assist\Encryptions\OTPEncryption;
 use Maatify\Functions\GeneralFunctions;
 use Maatify\Logger\Logger;
+use Maatify\OTPManager\Contracts\OTPEncryptionInterface;
 use Random\RandomException;
 
 class OTPManager {
@@ -31,8 +31,9 @@ class OTPManager {
     private OTPRoleChecker $roleChecker;
     private OTPRetryHandler $retryHandler;
     private int $expiry_of_code;
-
-    public function __construct(OTPRepository $otpRepository, OTPRoleChecker $roleChecker, OTPRetryHandler $retryHandler, int $expiry_of_code = 180) {
+    private OTPEncryptionInterface $otpEncryption;
+    public function __construct(OTPEncryptionInterface $otpEncryption, OTPRepository $otpRepository, OTPRoleChecker $roleChecker, OTPRetryHandler $retryHandler, int $expiry_of_code = 180) {
+        $this->otpEncryption = $otpEncryption;
         $this->otpRepository = $otpRepository;
         $this->roleChecker = $roleChecker;
         $this->retryHandler = $retryHandler;
@@ -83,7 +84,7 @@ class OTPManager {
             $otpCode = GeneralFunctions::GenerateOTP(6);
         }
 
-        $otpCodeHashed = (new OTPEncryption())->hashOTP($otpCode);
+        $otpCodeHashed = $this->otpEncryption->hashOTP($otpCode);
 
         $this->otpRepository->insertOTP($recipientId, $otpCodeHashed, $this->expiry_of_code, $deviceId);
 

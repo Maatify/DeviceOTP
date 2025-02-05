@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace Maatify\OTPManager;
 
+use Maatify\AppController\Contracts\EnumAppTypeIdInterface;
 use Maatify\AppController\Enums\EnumAppTypeId;
 use Maatify\OTPManager\Contracts\OTPEncryptionInterface;
 use Maatify\OTPManager\Contracts\OtpSenderTypeIdEnumInterface;
@@ -34,7 +35,7 @@ class OTPRepository
     private PDO $pdo;
     private string $tableName;
     private RecipientTypeIdEnumInterface $recipientTypeId;
-    private EnumAppTypeId $appTypeId;
+    private EnumAppTypeIdInterface $appTypeId;
     private OtpSenderTypeIdEnumInterface $otpSenderTypeId;
 
     private OTPEncryptionInterface $otpEncryption;
@@ -44,7 +45,7 @@ class OTPRepository
         OTPEncryptionInterface $otpEncryption,
         string $tableName = 'ct_otp_code',
         RecipientTypeIdEnumInterface $recipientTypeId = RecipientTypeIdEnum::Customer,
-        EnumAppTypeId $appTypeId = EnumAppTypeId::Web,
+        EnumAppTypeIdInterface $appTypeId = EnumAppTypeId::Web,
         OtpSenderTypeIdEnumInterface $otpSenderTypeId = OtpSenderTypeIdEnum::SMS
     )
     {
@@ -78,10 +79,10 @@ class OTPRepository
     ");
 
         $stmt->execute([
-            ':recipient_type_id'  => $this->recipientTypeId->value,
+            ':recipient_type_id'  => $this->recipientTypeId->getValue(),
             ':recipient_id'       => $recipientId,
-            ':app_type_id'        => $this->appTypeId->value,
-            ':otp_sender_type_id' => $this->otpSenderTypeId->value,
+            ':app_type_id'        => $this->appTypeId->getValue(),
+            ':otp_sender_type_id' => $this->otpSenderTypeId->getValue(),
         ]);
 
         return (int)$stmt->fetchColumn(); // Return the count of pending OTPs
@@ -115,11 +116,11 @@ class OTPRepository
     ");
 
         $stmt->execute([
-            ':recipient_type_id'  => $this->recipientTypeId->value,
+            ':recipient_type_id'  => $this->recipientTypeId->getValue(),
             ':recipient_id'       => $recipientId,
             ':device_id'          => $deviceId,
-            ':app_type_id'        => $this->appTypeId->value,
-            ':otp_sender_type_id' => $this->otpSenderTypeId->value,
+            ':app_type_id'        => $this->appTypeId->getValue(),
+            ':otp_sender_type_id' => $this->otpSenderTypeId->getValue(),
         ]);
 
         return (int)$stmt->fetchColumn(); // Return the count of pending OTPs
@@ -155,11 +156,11 @@ class OTPRepository
     ");
 
         $stmt->execute([
-            ':recipient_type_id'  => $this->recipientTypeId->value,
+            ':recipient_type_id'  => $this->recipientTypeId->getValue(),
             ':recipient_id'       => $recipientId,
             ':device_id'          => $deviceId,
-            ':app_type_id'        => $this->appTypeId->value,
-            ':otp_sender_type_id' => $this->otpSenderTypeId->value,
+            ':app_type_id'        => $this->appTypeId->getValue(),
+            ':otp_sender_type_id' => $this->otpSenderTypeId->getValue(),
         ]);
 
         return (int)$stmt->fetchColumn(); // Return the last time
@@ -172,13 +173,13 @@ class OTPRepository
             VALUES (:recipient_type_id, :recipient_id, :app_type_id, :device_id, :code, NOW(), :expiry, :otp_sender_type_id)
         ");
         $stmt->execute([
-            ':recipient_type_id'  => $this->recipientTypeId->value,
+            ':recipient_type_id'  => $this->recipientTypeId->getValue(),
             ':recipient_id'       => $recipientId,
-            ':app_type_id'        => $this->appTypeId->value,
+            ':app_type_id'        => $this->appTypeId->getValue(),
             ':device_id'          => $deviceId,
             ':code'               => $otpCode,
             ':expiry'             => $expiry,
-            ':otp_sender_type_id' => $this->otpSenderTypeId->value,
+            ':otp_sender_type_id' => $this->otpSenderTypeId->getValue(),
         ]);
     }
 
@@ -207,11 +208,11 @@ class OTPRepository
         ");
 
         $stmt->execute([
-            ':recipient_type_id'  => $this->recipientTypeId->value,
+            ':recipient_type_id'  => $this->recipientTypeId->getValue(),
             ':recipient_id'       => $recipientId,
             ':device_id'          => $deviceId,
-            ':app_type_id'        => $this->appTypeId->value,
-            ':otp_sender_type_id' => $this->otpSenderTypeId->value,
+            ':app_type_id'        => $this->appTypeId->getValue(),
+            ':otp_sender_type_id' => $this->otpSenderTypeId->getValue(),
         ]);
 
 

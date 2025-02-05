@@ -30,6 +30,18 @@ enum RecipientTypeIdEnum: int implements RecipientTypeIdEnumInterface
     case Merchant = 3;
     case Channel = 4;
 
+    /**
+     * Validate and get the corresponding EnumAppTypeId case.
+     *
+     * @param   int  $type_id
+     *
+     * @return ?self
+     */
+    public static function validate(int $type_id): ?self
+    {
+        return self::tryFrom($type_id);
+    }
+
     public function getValue(): int
     {
         return $this->value;

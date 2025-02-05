@@ -34,6 +34,18 @@ enum OtpSenderTypeIdEnum: int implements OtpSenderTypeIdEnumInterface
     case TWITTER = 7;
     case LINKEDIN = 8;
 
+    /**
+     * Validate and get the corresponding EnumAppTypeId case.
+     *
+     * @param   int  $type_id
+     *
+     * @return ?self
+     */
+    public static function validate(int $type_id): ?self
+    {
+        return self::tryFrom($type_id);
+    }
+
     public function getValue(): int
     {
         return $this->value;

@@ -23,6 +23,7 @@ namespace Maatify\OTPManager\Contracts;
 
 interface OtpSenderTypeIdEnumInterface
 {
+    public static function validate(int $type_id): ?self;
     public function getValue(): int;
 
     public function getName(): string;
