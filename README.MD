@@ -822,7 +822,7 @@ Your pull request will be reviewed, and you may be asked to make changes. Once a
 ---
 
 ## **License**
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+This library is licensed under the [MIT License](./LICENSE). You are free to use it in both commercial and non-commercial projects.
 
 ---
 
