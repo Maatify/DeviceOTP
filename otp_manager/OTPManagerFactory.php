@@ -69,6 +69,6 @@ class OTPManagerFactory
         $otpRoleChecker = new OTPRoleChecker(sizeof($retryDelays), $maxRolePendingOTPs, $otpRepository);
 
         // Return fully constructed OTPManager
-        return new OTPManager($otpRepository, $otpRoleChecker, $otpRetryHandler, $expiry_of_code);
+        return new OTPManager($otpEncryption, $otpRepository, $otpRoleChecker, $otpRetryHandler, $expiry_of_code);
     }
 }
