@@ -17,6 +17,6 @@ enum OtpSenderTypeIdEnum: int
 {
     case SMS = 1;
     case EMAIL = 2;
-    case WHATS_APP = 3;
-    case TELEGRAM = 4;
+    case WhatsApp = 3;
+    case Telegram = 4;
 }

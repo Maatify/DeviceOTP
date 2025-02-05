@@ -90,6 +90,23 @@ class OTPManager {
             'waiting_seconds' => $timeLeft];
     }
 
+    public function isCodePendingExist(int $recipientId, string $deviceId = ''): bool
+    {
+        if ($this->roleChecker->hasTooManyPendingOTPsForRole($recipientId)) {
+            return true;
+        }
+        if ($this->roleChecker->hasTooManyPendingOTPs($recipientId, $deviceId)) {
+            return true;
+        }
+        $retryAttempt = $this->retryHandler->getRetryAttempt($recipientId, $deviceId);
+        $lastRequestTime = $this->otpRepository->getLastRequestTime($recipientId, $deviceId);
+        $canRetry = $this->retryHandler->canRetry($retryAttempt, $lastRequestTime);
+        if ($lastRequestTime && !$canRetry) {
+            return true;
+        }
+        return false;
+    }
+
     public function confirmOTP(int $recipientId, string $otpCode, string $deviceId = ''): array {
         $result = $this->otpRepository->confirmOTP($recipientId, $deviceId, $otpCode);
 

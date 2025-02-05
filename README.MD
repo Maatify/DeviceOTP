@@ -222,6 +222,8 @@ This library follows a clean, modular structure to handle OTP functionality effe
   Defines OTP sender types such as:
     - `SMS`
     - `Email`
+    - `WhatsApp`
+    - `Telegram`
 
 ## **Error Codes**
 The library provides detailed error codes when an OTP request or verification fails. You can use these codes to handle errors programmatically and provide user-friendly feedback in your application.
