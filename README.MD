@@ -175,6 +175,7 @@ if ($result['pending']) {
     "waiting_seconds": 0
 }
 ```
+
 ---
 
 ### **5. Troubleshooting Common Issues**
@@ -220,6 +221,8 @@ $otpManager = OTPManagerFactory::create(
 - Check for any errors in the sender service logs or API responses.
 - If your primary delivery method (e.g., SMS) fails, consider implementing a backup delivery method such as email or push notifications to ensure that the user receives the OTP.
 
+---
+
 ## **Configuration**
 When creating the OTP manager using the factory, you can customize the following parameters:
 
@@ -233,6 +236,8 @@ When creating the OTP manager using the factory, you can customize the following
 | `$maxRolePendingOTPs`  | `5`               | The maximum number of pending OTPs allowed per role.                       |
 | `$maxTimeForDenied`    | `6000`            | Maximum time before permanently denying requests after too many failures.  |
 | `$expiry_of_code`      | `180` seconds     | Time before an OTP expires.                                                |
+
+---
 
 ## **Architecture Overview**
 This library follows a clean, modular structure to handle OTP functionality effectively:
@@ -269,6 +274,8 @@ This library follows a clean, modular structure to handle OTP functionality effe
     - `WhatsApp`
     - `Telegram`
 
+---
+
 ## **Error Codes**
 The library provides detailed error codes when an OTP request or verification fails. You can use these codes to handle errors programmatically and provide user-friendly feedback in your application.
 
@@ -284,11 +291,11 @@ The library provides detailed error codes when an OTP request or verification fa
 ### **Handling Error Codes:**
 You can handle the errors programmatically based on the returned code from the response:
 
-## **Requesting OTP Codes with Error Explanations**
+#### **Requesting OTP Codes with Error Explanations**
 
 When requesting an OTP using the `requestOTP` method, the library validates conditions such as pending requests, retry delays, and role-based limits before sending the OTP. It returns appropriate status codes and error messages in case of issues.
 
-#### Error Example
+##### Error Example
 Here's an example of a response when a user has exceeded the maximum OTP requests:
 ```php
 // Example response when the user has hit the maximum pending OTP requests.
@@ -300,7 +307,7 @@ Here's an example of a response when a user has exceeded the maximum OTP request
 'waiting_seconds' => 0,
 ]
 ```
-### **Response Codes and Explanations**
+#### **Response Codes and Explanations**
 | **Response Code** | **Error Code** | **Description**                                                             |
 |-------------------|----------------|-----------------------------------------------------------------------------|
 | `200`             | -              | OTP request successful, OTP has been generated and sent.                    |
@@ -313,11 +320,11 @@ Here's an example of a response when a user has exceeded the maximum OTP request
 Note: Internal error codes (e.g., `E001`) are mapped to external response codes (e.g., `429`). These codes can be customized in your application logic if needed.
 
 
+---
+
 ## **How OTP Request Validation Works**
 
 Before sending a new OTP, the library performs several checks to ensure that the request is valid and compliant with the configured limits and retry policies. This helps prevent abuse and ensures efficient OTP management.
-
----
 
 ### **Step-by-Step Process**
 
@@ -347,8 +354,6 @@ Before sending a new OTP, the library performs several checks to ensure that the
 5. **Returning the response:**
     - The response includes the OTP (for testing or development purposes), the expiry time, and the time users must wait before requesting another OTP.
 
----
-
 ### **Flowchart of OTP Request Validation**
 
 1. Request to **requestOTP**
@@ -362,8 +367,8 @@ Before sending a new OTP, the library performs several checks to ensure that the
     - **Yes:** Proceed to next step
 6. Generate OTP and store it in the database
 7. Return `200` (Success) with OTP and retry wait time
----
-### **Example Flowchart**
+
+#### **Example Flowchart**
 ```plaintext
 1. Receive OTP Request       →  2. Check Limits  
     ↓                                ↓  
@@ -371,9 +376,8 @@ Before sending a new OTP, the library performs several checks to ensure that the
     ↓                                ↓  
 5. Hash and Store OTP         →  6. Respond with Status  
 ```
----
 
-### **Summary of Possible Responses**
+#### **Summary of Possible Responses**
 | **Response Code** | **Error Code** | **Description**                                                             |
 |-------------------|----------------|-----------------------------------------------------------------------------|
 | `200`             | -              | OTP request successful, OTP has been generated and sent.                    |
@@ -382,9 +386,8 @@ Before sending a new OTP, the library performs several checks to ensure that the
 | `400`             | `E004`         | Retry time has not been reached. Please wait before requesting again.       |
 | `500`             | -              | Internal server error (e.g., issues with OTP generation or database).       |
 
----
 
-### **Example:**
+##### **Example:**
 You can call the `requestOTP` method to generate and send an OTP:
 ```php
 $response = $otpManager->requestOTP($recipientId = 1234, $deviceId = 'device_001');
@@ -408,6 +411,8 @@ switch ($response['code']) {
 }
 ```
 
+---
+
 ## **Confirming OTP Codes with Error Explanations**
 
 When a user submits an OTP for confirmation, the library validates the code and returns an appropriate response code. The `confirmOTP` method checks if the OTP is valid, expired, or incorrect, and returns one of the following error codes:
@@ -425,8 +430,6 @@ When a user submits an OTP for confirmation, the library validates the code and 
 ## **How OTP Verification Works**
 
 The OTP verification process involves validating the provided OTP against the stored OTP and checking for expiration or errors. The process ensures that only valid OTP submissions are accepted, preventing unauthorized access or misuse.
-
----
 
 ### **Step-by-Step Process**
 1. **Fetching the latest OTP:**
@@ -448,8 +451,6 @@ The OTP verification process involves validating the provided OTP against the st
     - If the OTP is valid and within the expiration time, it is marked as **used** in the database to prevent reuse.
     - The library returns a `200` response (OTP Verified).
 
----
-
 ### **Flowchart of OTP Verification**
 
 1. Request to **confirmOTP**
@@ -465,7 +466,7 @@ The OTP verification process involves validating the provided OTP against the st
     - **No:** Proceed to next step
 6. Mark OTP as **used** and return `200` (OTP Verified)
 
----
+
 ### **Example Flowchart**
 ```plaintext
 1. Receive OTP Verification   →  2. Fetch Latest OTP  
@@ -476,7 +477,7 @@ The OTP verification process involves validating the provided OTP against the st
     ↓  
 7. Return Success
 ```
----
+
 ### **Summary of Possible Responses**
 
 | **Response Code** | **Description**                                                 |
@@ -486,7 +487,6 @@ The OTP verification process involves validating the provided OTP against the st
 | `401`             | Provided OTP is incorrect.                                      |
 | `404`             | No matching OTP was found for the given recipient and device.   |
 
----
 
 ### **Example:**
 You can call the `confirmOTP` method to validate the OTP provided by the user:
@@ -512,10 +512,10 @@ switch ($response['code']) {
 ```
 This process ensures that only secure and valid OTP submissions are accepted, protecting sensitive operations like password resets, logins, or transactions.
 
+---
+
 ## **Extending the Library**
 You can customize or extend the library to suit your needs by adding additional OTP sender types or modifying retry mechanisms.
-
----
 
 ### **1. Adding a New OTP Sender Type**
 To add a new sender type (e.g., WhatsApp, Push Notifications), extend the `OtpSenderTypeIdEnum`:
@@ -548,17 +548,16 @@ $otpManager = OTPManagerFactory::create(
 
 You can adjust these values as needed to prevent abuse of OTP requests.
 
----
-
 #### **How It Works:**
 The library uses the `OTPAppDeviceRetryHandler` class to enforce the retry delays. The retry handler compares the time elapsed since the last OTP request to the corresponding delay defined in the `$retryDelays` array:
 
 1. If the user has waited the required time, the request is allowed.
 2. If not, the system returns an error (`400` with `E004`) indicating how many seconds remain before the next request is allowed.
 
+
 ---
 
-#### **Advanced Customization:**
+## **Advanced Customization:**
 If you want different retry delays for specific users or devices, you can extend the `OTPAppDeviceRetryHandler` to add custom logic:
 
 #### **Example:**
@@ -591,8 +590,6 @@ By customizing the retry mechanism, you can optimize user experience while maint
 
 Security is a core focus of this library. It is designed to handle OTPs securely, preventing vulnerabilities such as OTP brute-forcing, replay attacks, and SQL injection. Below are key security features and considerations:
 
----
-
 ### **1. SQL Injection Prevention**
 - All database interactions are handled using **prepared statements** with **bound parameters** via **PDO**.
 - This ensures that user input is properly sanitized, preventing SQL injection attacks.
@@ -604,8 +601,6 @@ $stmt = $this->pdo->prepare("
 ");
 $stmt->execute([':recipient_id' => $recipientId]);
 ```
-
----
 
 ### **2. OTP Encryption with Custom Class**
 - To enhance security and customization, use the custom `OTPEncryption` class implementing the `OTPEncryptionInterface` interface 
@@ -648,8 +643,6 @@ class OTPEncryption implements OTPEncryptionInterface
 ```
 > ⚙️ **Extensibility:** This implementation uses Argon2id, but you can easily replace it with other secure hashing mechanisms, such as **bcrypt**, **SHA256**, or **external encryption APIs**, by modifying the `hashOTP()` method in the `OTPEncryption` class.
 
----
-
 ### **3. Rate Limiting and Retry Delays**
 - To prevent **brute-force attacks**, the library enforces customizable **retry delays** using the `OTPAppDeviceRetryHandler` class.
 - Retry delays are crucial for preventing **brute-force attacks** and ensuring a balance between security and usability. Short delays may be more user-friendly but could allow brute-force attempts, while long delays reduce attack risks but may inconvenience users. We recommend starting with conservative values like `[60, 180, 300]` and adjusting based on your application’s security requirements.
@@ -672,8 +665,6 @@ retryDelays: $retryDelays
 
 This configuration ensures that OTP requests and verifications are throttled appropriately, protecting the system from abuse while maintaining a good user experience.
 
----
-
 ### **4. OTP Expiration**
 - OTPs have a configurable **expiration time** to limit their validity and prevent **replay attacks**.
 - By default, the expiration time is set to **180 seconds**, but it can be adjusted through the factory configuration.
@@ -685,10 +676,7 @@ $otpManager = OTPManagerFactory::create(
     expiry_of_code: 300  // Set OTP expiration to 300 seconds
 );
 ```
-
 This ensures that OTPs remain valid only for a limited time, reducing the risk of unauthorized use or replay attacks.
-
----
 
 ### **5. Storing and Verifying the OTP**
 When requesting and confirming OTPs, the `OTPEncryption` class is used to securely hash and verify OTPs.
@@ -712,8 +700,6 @@ $stmt->execute([
 ':expiry' => time() + 180  // OTP expires in 3 minutes
 ]);
 ```
-
----
 
 #### **Verifying the OTP:**
 ```php
@@ -765,13 +751,9 @@ if ($storedHashedOtp) {
 }
 ```
 
----
-
 ### **6. Marking OTPs as Used**
 - Once an OTP is successfully verified, it is marked as **used** in the database to prevent **replay attacks**.
 - Subsequent attempts to use the same OTP will result in a failed verification, ensuring that OTPs are **one-time use only**.
-
----
 
 ### **7. Error Messaging**
 - The library returns **clear and informative error messages** for failed attempts, helping users understand the reason for failure.
@@ -789,9 +771,6 @@ try {
     die("An error occurred. Please try again later.");
 }
 ```
-
----
-
 By following these security practices, you can protect sensitive operations (such as **logins** or **password resets**) while offering users a **safe and reliable OTP experience**.
 
 ---
@@ -800,7 +779,6 @@ By following these security practices, you can protect sensitive operations (suc
 
 We welcome contributions to improve this library! If you want to report bugs, suggest new features, or contribute code, follow these steps:
 
----
 
 ### **1. Fork the Repository**
 Fork the repository on GitHub to create your copy.
@@ -840,6 +818,8 @@ Your pull request will be reviewed, and you may be asked to make changes. Once a
 - **Follow [PSR-12 coding standards](https://www.php-fig.org/psr/psr-12/)** to maintain consistency across the codebase.
 - **Write unit tests** for new features if possible to ensure reliability and prevent regressions.
 - **Ensure that your code does not introduce security vulnerabilities**, such as SQL injection or insecure OTP handling.
+
+---
 
 ## **License**
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
