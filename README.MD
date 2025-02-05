@@ -51,16 +51,24 @@ The `Device OTP Manager` library is a robust, secure OTP (One-Time Password) man
 
 
 ## **Installation**
-1. Clone or download the project:
-    ```bash
-    git clone https://github.com/your-username/DeviceOTP.git
-    ```
-2. Install any required dependencies using Composer:
-    ```bash
-    composer install
+
+1. Option 1: Clone or download the project manually
+    ```shell
+    composer require maatify/device-otp
     ```
 
-3. Set up the database table using this SQL schema:
+2. Option 2: Clone or download the project:
+   You can directly install the library using Composer:
+    ```bash
+    git clone https://github.com/Maatify/DeviceOTP.git
+    ```
+3. Install required dependencies (if cloning manually):
+   Navigate to the project directory and run:
+   ```bash
+   composer install
+   ```
+
+4. Set up the database table using this SQL schema:
     ```sql
     CREATE TABLE `ct_otp_code` (
         `otp_id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -728,7 +736,7 @@ We welcome contributions to improve this library! If you want to report bugs, su
 Fork the repository on GitHub to create your copy.
 
 ```bash
-git clone https://github.com/your-username/DeviceOTP.git
+git clone https://github.com/Maatify/DeviceOTP.git
 cd DeviceOTP
 ```
 ### **2. Create a Feature Branch**
