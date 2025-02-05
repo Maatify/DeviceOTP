@@ -93,7 +93,7 @@ You can create an instance of `OTPManager` using the factory method with default
 
 ```php
 use Maatify\AppController\Enums\EnumAppTypeId;
-use Maatify\OTPManager\Enums\OtpSenderTypeIdEnum;
+use Maatify\OTPManager\Enums\OTPSenderTypeIdEnum;
 use Maatify\OTPManager\Enums\RecipientTypeIdEnum;
 use Maatify\OTPManager\OTPManagerFactory;  
 
@@ -105,7 +105,7 @@ $otpManager = OTPManagerFactory::create(
     tableName: 'ct_otp_code',  
     recipientTypeId: RecipientTypeIdEnum::Customer,  
     appTypeId: EnumAppTypeId::Web,  
-    otpSenderTypeId: OtpSenderTypeIdEnum::SMS  
+    otpSenderTypeId: OTPSenderTypeIdEnum::SMS  
 ); 
 ```
 

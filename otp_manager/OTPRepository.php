@@ -21,12 +21,12 @@ declare(strict_types=1);
 
 namespace Maatify\OTPManager;
 
-use Maatify\AppController\Contracts\EnumAppTypeIdInterface;
-use Maatify\AppController\Enums\EnumAppTypeId;
+use Maatify\AppController\Contracts\AppTypeIdInterface;
+use Maatify\AppController\Enums\AppTypeIdEnum;
 use Maatify\OTPManager\Contracts\OTPEncryptionInterface;
-use Maatify\OTPManager\Contracts\OtpSenderTypeIdEnumInterface;
-use Maatify\OTPManager\Contracts\RecipientTypeIdEnumInterface;
-use Maatify\OTPManager\Enums\OtpSenderTypeIdEnum;
+use Maatify\OTPManager\Contracts\OTPSenderTypeIdInterface;
+use Maatify\OTPManager\Contracts\RecipientTypeIdInterface;
+use Maatify\OTPManager\Enums\OTPSenderTypeIdEnum;
 use Maatify\OTPManager\Enums\RecipientTypeIdEnum;
 use PDO;
 
@@ -34,9 +34,9 @@ class OTPRepository
 {
     private PDO $pdo;
     private string $tableName;
-    private RecipientTypeIdEnumInterface $recipientTypeId;
-    private EnumAppTypeIdInterface $appTypeId;
-    private OtpSenderTypeIdEnumInterface $otpSenderTypeId;
+    private RecipientTypeIdInterface $recipientTypeId;
+    private AppTypeIdInterface $appTypeId;
+    private OTPSenderTypeIdInterface $otpSenderTypeId;
 
     private OTPEncryptionInterface $otpEncryption;
 
@@ -44,9 +44,9 @@ class OTPRepository
         PDO $pdo,
         OTPEncryptionInterface $otpEncryption,
         string $tableName = 'ct_otp_code',
-        RecipientTypeIdEnumInterface $recipientTypeId = RecipientTypeIdEnum::Customer,
-        EnumAppTypeIdInterface $appTypeId = EnumAppTypeId::Web,
-        OtpSenderTypeIdEnumInterface $otpSenderTypeId = OtpSenderTypeIdEnum::SMS
+        RecipientTypeIdInterface $recipientTypeId = RecipientTypeIdEnum::Customer,
+        AppTypeIdInterface $appTypeId = AppTypeIdEnum::Web,
+        OTPSenderTypeIdInterface $otpSenderTypeId = OTPSenderTypeIdEnum::SMS
     )
     {
         $this->otpEncryption = $otpEncryption;

@@ -4,7 +4,7 @@
  * @Liberary    DeviceOTP
  * @Project     DeviceOTP
  * @author      Mohamed Abdulalim (megyptm) <mohamed@maatify.dev>
- * @since       2025-02-05 10:47
+ * @since       2025-02-05 12:14
  * @see         https://www.maatify.dev Maatify.com
  * @link        https://github.com/Maatify/DeviceOTP  view project on GitHub
  * @link        https://github.com/Maatify/AppHandler  (maatify/app-handler)
@@ -17,15 +17,23 @@
  *
  */
 
-
 declare(strict_types=1);
 
-namespace Maatify\OTPManager\Contracts;
+namespace Maatify\OTPManager\Service;
 
-interface RecipientTypeIdEnumInterface
+use Maatify\OTPManager\Contracts\RecipientTypeIdInterface;
+
+class RecipientTypeIdService
 {
-    public static function validate(int $type_id): ?self;
-    public function getValue(): int;
+    private RecipientTypeIdInterface $appTypeIdEnum;
 
-    public function getName(): string;
+    public function __construct(RecipientTypeIdInterface $appTypeIdEnum)
+    {
+        $this->appTypeIdEnum = $appTypeIdEnum;
+    }
+
+    public function validate(int $type_id): ?RecipientTypeIdInterface
+    {
+        return $this->appTypeIdEnum::validate($type_id);
+    }
 }

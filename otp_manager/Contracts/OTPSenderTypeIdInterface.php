@@ -21,7 +21,7 @@ declare(strict_types=1);
 
 namespace Maatify\OTPManager\Contracts;
 
-interface OtpSenderTypeIdEnumInterface
+interface OTPSenderTypeIdInterface
 {
     public static function validate(int $type_id): ?self;
     public function getValue(): int;

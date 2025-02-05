@@ -21,9 +21,9 @@ declare(strict_types=1);
 
 namespace Maatify\OTPManager\Enums;
 
-use Maatify\OTPManager\Contracts\OtpSenderTypeIdEnumInterface;
+use Maatify\OTPManager\Contracts\OTPSenderTypeIdInterface;
 
-enum OtpSenderTypeIdEnum: int implements OtpSenderTypeIdEnumInterface
+enum OTPSenderTypeIdEnum: int implements OTPSenderTypeIdInterface
 {
     case SMS = 1;
     case EMAIL = 2;

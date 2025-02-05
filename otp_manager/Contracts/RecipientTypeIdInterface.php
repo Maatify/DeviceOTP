@@ -4,7 +4,7 @@
  * @Liberary    DeviceOTP
  * @Project     DeviceOTP
  * @author      Mohamed Abdulalim (megyptm) <mohamed@maatify.dev>
- * @since       2025-02-02 06:28
+ * @since       2025-02-05 10:47
  * @see         https://www.maatify.dev Maatify.com
  * @link        https://github.com/Maatify/DeviceOTP  view project on GitHub
  * @link        https://github.com/Maatify/AppHandler  (maatify/app-handler)
@@ -19,36 +19,12 @@
 
 declare(strict_types=1);
 
-namespace Maatify\OTPManager\Enums;
+namespace Maatify\OTPManager\Contracts;
 
-use Maatify\OTPManager\Contracts\RecipientTypeIdInterface;
-
-enum RecipientTypeIdEnum: int implements RecipientTypeIdInterface
+interface RecipientTypeIdInterface
 {
-    case Customer = 1;
-    case Admin = 2;
-    case Merchant = 3;
-    case Channel = 4;
+    public static function validate(int $type_id): ?self;
+    public function getValue(): int;
 
-    /**
-     * Validate and get the corresponding EnumAppTypeId case.
-     *
-     * @param   int  $type_id
-     *
-     * @return ?self
-     */
-    public static function validate(int $type_id): ?self
-    {
-        return self::tryFrom($type_id);
-    }
-
-    public function getValue(): int
-    {
-        return $this->value;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
+    public function getName(): string;
 }

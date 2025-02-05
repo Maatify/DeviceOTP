@@ -21,11 +21,12 @@ declare(strict_types=1);
 
 namespace Maatify\OTPManager;
 
-use Maatify\AppController\Enums\EnumAppTypeId;
+use Maatify\AppController\Contracts\AppTypeIdInterface;
+use Maatify\AppController\Enums\AppTypeIdEnum;
 use Maatify\OTPManager\Contracts\OTPEncryptionInterface;
-use Maatify\OTPManager\Contracts\OtpSenderTypeIdEnumInterface;
-use Maatify\OTPManager\Contracts\RecipientTypeIdEnumInterface;
-use Maatify\OTPManager\Enums\OtpSenderTypeIdEnum;
+use Maatify\OTPManager\Contracts\OTPSenderTypeIdInterface;
+use Maatify\OTPManager\Contracts\RecipientTypeIdInterface;
+use Maatify\OTPManager\Enums\OTPSenderTypeIdEnum;
 use Maatify\OTPManager\Enums\RecipientTypeIdEnum;
 use PDO;
 
@@ -35,9 +36,9 @@ class OTPManagerFactory
         PDO $pdo,
         OTPEncryptionInterface $otpEncryption,
         string $tableName = 'ct_otp_code',
-        RecipientTypeIdEnumInterface $recipientTypeId = RecipientTypeIdEnum::Customer,
-        EnumAppTypeId $appTypeId = EnumAppTypeId::Web,
-        OtpSenderTypeIdEnumInterface $otpSenderTypeId = OtpSenderTypeIdEnum::SMS,
+        RecipientTypeIdInterface $recipientTypeId = RecipientTypeIdEnum::Customer,
+        AppTypeIdInterface $appTypeId = AppTypeIdEnum::Web,
+        OTPSenderTypeIdInterface $otpSenderTypeId = OTPSenderTypeIdEnum::SMS,
         array $retryDelays = [
             60,     // First attempt (or no previous OTP) requires 60 seconds wait
             180,    // First retry attempt after failure
