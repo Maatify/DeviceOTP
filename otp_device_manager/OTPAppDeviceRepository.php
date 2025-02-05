@@ -13,8 +13,8 @@ declare(strict_types=1);
 
 namespace Maatify\OTPDeviceManager;
 
-use App\Assist\Encryptions\OTPEncryption;
 use Maatify\AppController\Enums\EnumAppTypeId;
+use Maatify\OTPManager\Contracts\OTPEncryptionInterface;
 use Maatify\OTPManager\Enums\OtpSenderTypeIdEnum;
 use Maatify\OTPManager\Enums\RecipientTypeIdEnum;
 use PDO;
@@ -27,14 +27,18 @@ class OTPAppDeviceRepository
     private EnumAppTypeId $appTypeId;
     private OtpSenderTypeIdEnum $otpSenderTypeId;
 
+    private OTPEncryptionInterface $otpEncryption;
+
     public function __construct(
         PDO $pdo,
+        OTPEncryptionInterface $otpEncryption,
         string $tableName = 'ct_otp_code',
         RecipientTypeIdEnum $recipientTypeId = RecipientTypeIdEnum::Customer,
         EnumAppTypeId $appTypeId = EnumAppTypeId::Web,
         OtpSenderTypeIdEnum $otpSenderTypeId = OtpSenderTypeIdEnum::SMS
     )
     {
+        $this->otpEncryption = $otpEncryption;
         $this->pdo = $pdo;
         $this->tableName = $tableName;
         $this->recipientTypeId = $recipientTypeId;
@@ -211,7 +215,7 @@ class OTPAppDeviceRepository
 
         // Loop through the result set if the first row exists
         do {
-            if ((new OTPEncryption())->confirmOTP($otpCode, $otpRow['code'])) {
+            if ($this->otpEncryption->confirmOTP($otpCode, $otpRow['code'])) {
                 if ($otpRow['elapsed_time'] <= $otpRow['expiry']) {
                     // Mark this specific OTP as used
                     $updateStmt = $this->pdo->prepare("UPDATE {$this->tableName} SET is_success = 1 WHERE otp_id = :otp_id");

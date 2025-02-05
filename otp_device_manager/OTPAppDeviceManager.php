@@ -78,7 +78,7 @@ class OTPAppDeviceManager {
         }
 
         $otpCodeHashed = (new OTPEncryption())->hashOTP($otpCode);
-//        $expiry = 180; // Example fixed expiry
+
         $this->otpRepository->insertOTP($recipientId, $deviceId, $otpCodeHashed, $this->expiry_of_code);
 
         $timeLeft = $this->retryHandler->successTimeLeft($retryAttempt);

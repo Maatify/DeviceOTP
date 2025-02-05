@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Maatify\OTPDeviceManager;
 
 use Maatify\AppController\Enums\EnumAppTypeId;
+use Maatify\OTPManager\Contracts\OTPEncryptionInterface;
 use Maatify\OTPManager\Enums\OtpSenderTypeIdEnum;
 use Maatify\OTPManager\Enums\RecipientTypeIdEnum;
 use PDO;
@@ -22,6 +23,7 @@ class OTPAppDeviceManagerFactory
 {
     public static function create(
         PDO $pdo,
+        OTPEncryptionInterface $otpEncryption,
         string $tableName = 'ct_otp_code',
         RecipientTypeIdEnum $recipientTypeId = RecipientTypeIdEnum::Customer,
         EnumAppTypeId $appTypeId = EnumAppTypeId::Web,
@@ -40,6 +42,7 @@ class OTPAppDeviceManagerFactory
         // Instantiate repository and handlers
         $otpRepository = new OTPAppDeviceRepository(
             pdo            : $pdo,
+            otpEncryption  : $otpEncryption,
             tableName      : $tableName,
             recipientTypeId: $recipientTypeId,
             appTypeId      : $appTypeId,
@@ -52,7 +55,7 @@ class OTPAppDeviceManagerFactory
             maxTimeForDenied: $maxTimeForDenied,
         );
 
-//        $otpRoleChecker = new OTPRoleChecker($maxDevicePendingOTPs, $maxRolePendingOTPs, $otpRepository);
+        //        $otpRoleChecker = new OTPRoleChecker($maxDevicePendingOTPs, $maxRolePendingOTPs, $otpRepository);
         $otpRoleChecker = new OTPAppDeviceRoleChecker(sizeof($retryDelays), $maxRolePendingOTPs, $otpRepository);
 
         // Return fully constructed OTPManager

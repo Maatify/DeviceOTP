@@ -45,10 +45,12 @@ The `Device OTP Manager` library is a robust, secure OTP (One-Time Password) man
 
 ## **Features**
 - Secure OTP generation using `random_int` and fallback encryption.
-- Flexible retry handling with customizable delays.
+- Flexible retry handling and configurable delays to control abuse.
 - OTP role and device-specific limits.
 - OTP expiry and validation handling.
-- Support for multiple OTP sender types (e.g., SMS, Email).
+- Interface-driven OTP hashing and verification using `OTPEncryptionInterface`.
+- Supports various OTP delivery methods: SMS, Email, WhatsApp, Telegram.
+- Secure OTP generation and storage with custom hashing mechanisms.
 
 
 ## **Installation**
@@ -58,60 +60,60 @@ The `Device OTP Manager` library is a robust, secure OTP (One-Time Password) man
     composer require maatify/device-otp
     ```
 
-2. Option 2: Clone or download the project:
-   You can directly install the library using Composer:
+2. If cloning manually, download and install dependencies:
     ```bash
-    git clone https://github.com/Maatify/DeviceOTP.git
+    git clone https://github.com/Maatify/DeviceOTP.git  
+    cd DeviceOTP  
+    composer install  
     ```
-3. Install required dependencies (if cloning manually):
-   Navigate to the project directory and run:
-   ```bash
-   composer install
-   ```
 
-4. Set up the database table using this SQL schema:
+3. Set up the database table using this SQL schema:
     ```sql
-    CREATE TABLE `ct_otp_code` (
-        `otp_id` INT AUTO_INCREMENT PRIMARY KEY,
-        `recipient_type_id` INT NOT NULL,
-        `recipient_id` INT NOT NULL,
-        `app_type_id` INT NOT NULL,
-        `device_id` VARCHAR(255) NOT NULL,
-        `code` VARCHAR(255) NOT NULL,
-        `time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        `expiry` INT NOT NULL,
-        `otp_sender_type_id` INT NOT NULL,
-        `is_success` TINYINT(1) DEFAULT 0
-    );
+   CREATE TABLE `ct_otp_code` (
+    `otp_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `recipient_type_id` INT NOT NULL,
+    `recipient_id` INT NOT NULL,
+    `app_type_id` INT NOT NULL,
+    `device_id` VARCHAR(255) NOT NULL,
+    `code` VARCHAR(255) NOT NULL,
+    `time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `expiry` INT NOT NULL,
+    `otp_sender_type_id` INT NOT NULL,
+    `is_success` TINYINT(1) DEFAULT 0,
+    KEY (`recipient_id`, `device_id`, `is_success`)
+   );
     ```
 
 ---
 
 ## **Usage**
 ### 1. **Instantiate the OTP Manager using the Factory**
-You can create an instance of `OTPAppDeviceManager` using the factory method:
+You can create an instance of `OTPAppDeviceManager` using the factory method with default or custom settings:
 
 ```php
-use Maatify\OTPDeviceManager\OTPAppDeviceManagerFactory;
-use Maatify\OTPManager\Enums\RecipientTypeIdEnum;
-use Maatify\OTPManager\Enums\OtpSenderTypeIdEnum;
-use Maatify\AppController\Enums\EnumAppTypeId;
+use Maatify\OTPDeviceManager\OTPAppDeviceManagerFactory;  
+use Maatify\OTPManager\Enums\RecipientTypeIdEnum;  
+use Maatify\OTPManager\Enums\OtpSenderTypeIdEnum;  
+use Maatify\AppController\Enums\EnumAppTypeId;  
+use Maatify\OTPManager\Contracts\OTPEncryptionInterface;  
 
-$pdo = new PDO('mysql:host=localhost;dbname=your_database', 'username', 'password');
-$otpManager = OTPAppDeviceManagerFactory::create(
-    pdo: $pdo,
-    tableName: 'ct_otp_code',
-    recipientTypeId: RecipientTypeIdEnum::Customer,
-    appTypeId: EnumAppTypeId::Web,
-    otpSenderTypeId: OtpSenderTypeIdEnum::SMS
-);
+$pdo = new PDO('mysql:host=localhost;dbname=your_database', 'username', 'password');  
+
+$otpManager = OTPAppDeviceManagerFactory::create(  
+    pdo: $pdo,  
+    otpEncryption: new OTPEncryption(),  
+    tableName: 'ct_otp_code',  
+    recipientTypeId: RecipientTypeIdEnum::Customer,  
+    appTypeId: EnumAppTypeId::Web,  
+    otpSenderTypeId: OtpSenderTypeIdEnum::SMS  
+); 
 ```
 
 ### 2. **Requesting an OTP**
 To request a new OTP for a recipient and device:
 
 ```php
-$response = $otpManager->requestOTP($recipientId = 1234, $deviceId = 'device_001');
+$response = $otpManager->requestOTP(recipientId: 1234, deviceId: 'device_001');  
 
 if ($response['status'] === 'success') {
     echo "OTP: " . $response['otp']; // ⚠️ Warning: Never expose OTPs in production. The example shown is for development purposes only.
@@ -139,41 +141,41 @@ Here are solutions to some common issues when using the OTP Manager:
 - [OTP Expiry Issues (410 Expired)](#otp-expiry-issues-410-expired)
 
 #### **Error Code 429 or 430 (Too Many Requests)**
-   **Cause:** You may be hitting the maximum allowed pending OTP requests for the recipient or device.  
-   **Solution:**
-    - Check the `$maxRolePendingOTPs` setting in the configuration.
-    - Adjust the limits based on your application’s traffic or business requirements.
-    - Consider increasing retry delays to balance OTP generation requests.
+**Cause:** You may be hitting the maximum allowed pending OTP requests for the recipient or device.  
+**Solution:**
+- Check the `$maxRolePendingOTPs` setting in the configuration.
+- Adjust the limits based on your application’s traffic or business requirements.
+- Consider increasing retry delays to balance OTP generation requests.
 
 #### **OTP Verification Fails with 401 (Invalid OTP)**
-**Cause:** The OTP provided by the user does not match the one stored in the database.
-   **Cause:** The OTP provided by the user does not match the one stored in the database.  
-   **Solution:**
-    - Double-check that you’re hashing and comparing the OTP correctly using `password_verify()` if hashing is enabled.
-    - Ensure you are validating against the latest OTP (not an expired or previously used one).
+**Cause:** The OTP provided by the user does not match the one stored in the database.  
+**Solution:**
+- Double-check that you’re hashing and comparing the OTP correctly using the implementation of the `OTPEncryptionInterface`.
+- Ensure you are validating against the latest OTP (not an expired or previously used one).
 
 #### **OTP Expiry Issues (`410` Expired)**
-   **Cause:** The OTP’s expiration time may be set too low, causing it to expire before the user can input it.  
-   **Solution:**
-    - Increase the `$expiry_of_code` parameter in the configuration. For example:
-      ```php
-      $otpManager = OTPAppDeviceManagerFactory::create(
-          pdo: $pdo,
-          expiry_of_code: 300  // Set expiration to 5 minutes
-      );
-      ```
+**Cause:** The OTP’s expiration time may be set too low, causing it to expire before the user can input it.  
+**Solution:**
+- Increase the `$expiry_of_code` parameter in the configuration. For example:
+```php
+$otpManager = OTPAppDeviceManagerFactory::create(
+    pdo: $pdo,
+    expiry_of_code: 300  // Set expiration to 5 minutes
+);
+```
 
-#### **Getting a database connection error.**  
-   **Cause:** Incorrect database credentials or the database service is down.  
-   **Solution:**
-    - Verify your `$pdo` connection string, username, and password.
-    - Ensure that the database server is running and accessible.
+#### **Getting a database connection error.**
+**Cause:** Incorrect database credentials or the database service is down.  
+**Solution:**
+- Verify your `$pdo` connection string, username, and password.
+- Ensure the database server is running and accessible.
 
-#### **OTP not being sent (no SMS or email received).**  
-   **Cause:** There may be an issue with the configured OTP sender service (e.g., SMS or email).  
-   **Solution:**
-    - Ensure that the selected sender type (e.g., `SMS`, `Email`) is properly configured.
-    - Check for any errors in the sender service logs or API responses.
+#### **OTP not being sent (no SMS or email received).**
+**Cause:** There may be an issue with the configured OTP sender service (e.g., SMS or email).  
+**Solution:**
+- Ensure that the selected sender type (e.g., `SMS`, `Email`) is properly configured.
+- Check for any errors in the sender service logs or API responses.
+- If your primary delivery method (e.g., SMS) fails, consider implementing a backup delivery method such as email or push notifications to ensure that the user receives the OTP.
 
 ## **Configuration**
 When creating the OTP manager using the factory, you can customize the following parameters:
@@ -223,7 +225,7 @@ This library follows a clean, modular structure to handle OTP functionality effe
     - `Email`
 
 ## **Error Codes**
-The library returns detailed error codes to help handle OTP failures gracefully:
+The library provides detailed error codes when an OTP request or verification fails. You can use these codes to handle errors programmatically and provide user-friendly feedback in your application.
 
 | **Error Code** | **Description**                                                  |
 |----------------|------------------------------------------------------------------|
@@ -289,14 +291,14 @@ Before sending a new OTP, the library performs several checks to ensure that the
     - The OTP is hashed using the `OTPEncryption` class before being stored in the database.
 
 4. **Saving the OTP in the database:**
-    - The OTP, recipient information, and expiry time are stored in the database for future verification. 
-    
-   example:
-```mysql
-INSERT INTO ct_otp_code (recipient_id, device_id, code, expiry, otp_sender_type_id, is_success) 
-VALUES (1234, 'device_001', 'hashed_otp_here', UNIX_TIMESTAMP(NOW()) + 180, 1, 0);
+    - The OTP, recipient information, and expiry time are stored in the database for future verification.
 
-```
+   example:
+    ```mysql
+    INSERT INTO ct_otp_code (recipient_id, device_id, code, expiry, otp_sender_type_id, is_success)
+    VALUES (1234, 'device_001', 'hashed_otp_here', UNIX_TIMESTAMP(NOW()) + 180, 1, 0);
+    
+    ```
 5. **Returning the response:**
     - The response includes the OTP (for testing or development purposes), the expiry time, and the time users must wait before requesting another OTP.
 
@@ -315,7 +317,15 @@ VALUES (1234, 'device_001', 'hashed_otp_here', UNIX_TIMESTAMP(NOW()) + 180, 1, 0
     - **Yes:** Proceed to next step
 6. Generate OTP and store it in the database
 7. Return `200` (Success) with OTP and retry wait time
-
+---
+### **Example Flowchart**
+```plaintext
+1. Receive OTP Request       →  2. Check Limits  
+    ↓                                ↓  
+3. Enforce Retry Delays       →  4. Generate OTP  
+    ↓                                ↓  
+5. Hash and Store OTP         →  6. Respond with Status  
+```
 ---
 
 ### **Summary of Possible Responses**
@@ -410,6 +420,17 @@ The OTP verification process involves validating the provided OTP against the st
     - **No:** Proceed to next step
 6. Mark OTP as **used** and return `200` (OTP Verified)
 
+---
+### **Example Flowchart**
+```plaintext
+1. Receive OTP Verification   →  2. Fetch Latest OTP  
+    ↓                                ↓  
+3. Verify OTP Exists          →  4. Compare OTP  
+    ↓                                ↓  
+5. Check Expiry               →  6. Mark as Used  
+    ↓  
+7. Return Success
+```
 ---
 ### **Summary of Possible Responses**
 
@@ -542,14 +563,17 @@ $stmt->execute([':recipient_id' => $recipientId]);
 ---
 
 ### **2. OTP Encryption with Custom Class**
-- To enhance security and customization, use the custom `OTPEncryption` class (`App\Assist\Encryptions\OTPEncryption`) for hashing OTPs before storing them and verifying them during confirmation.
+- To enhance security and customization, use the custom `OTPEncryption` class implementing the `OTPEncryptionInterface` interface 
+  (`Maatify\OTPManager\Contracts\OTPEncryptionInterface`). You can customize it to use any hashing mechanism (e.g., Argon2id or bcrypt).
 - This allows you to implement any hashing mechanism, including **bcrypt**, **Argon2**, or **external encryption services**.
+- While **Argon2id** is recommended for its strong resistance to side-channel attacks and GPU cracking, you can also use other secure options like 
+  **bcrypt** if compatibility or performance is a concern. Choose the mechanism that best fits your security and performance requirements.
 
 #### **Custom OTPEncryption Class:**
 ```php
-namespace App\Assist\Encryptions;
+use Maatify\OTPManager\Contracts\OTPEncryptionInterface;
 
-class OTPEncryption
+class OTPEncryption implements OTPEncryptionInterface
 {
     /**
      * Hash the OTP before saving it.
@@ -583,9 +607,11 @@ class OTPEncryption
 
 ### **3. Rate Limiting and Retry Delays**
 - To prevent **brute-force attacks**, the library enforces customizable **retry delays** using the `OTPAppDeviceRetryHandler` class.
+- Retry delays are crucial for preventing **brute-force attacks** and ensuring a balance between security and usability. Short delays may be more user-friendly but could allow brute-force attempts, while long delays reduce attack risks but may inconvenience users. We recommend starting with conservative values like `[60, 180, 300]` and adjusting based on your application’s security requirements.
+- Retry delays are essential for preventing **brute-force attacks** on OTPs while maintaining a good user experience. A well-balanced configuration ensures that legitimate users are not significantly inconvenienced, while attackers are effectively blocked from attempting repeated OTP verifications.
 - If users request or verify OTPs too frequently, they are temporarily blocked.
 
-#### **Example Configuration:**
+#### **Example Configuration**
 ```php
 $retryDelays = [60, 180, 300];  // Delays between retries in seconds
 
@@ -607,7 +633,7 @@ This configuration ensures that OTP requests and verifications are throttled app
 - OTPs have a configurable **expiration time** to limit their validity and prevent **replay attacks**.
 - By default, the expiration time is set to **180 seconds**, but it can be adjusted through the factory configuration.
 
-#### **Example Configuration:**
+#### **Example Configuration**
 ```php
 $otpManager = OTPAppDeviceManagerFactory::create(
     pdo: $pdo,
@@ -624,14 +650,12 @@ When requesting and confirming OTPs, the `OTPEncryption` class is used to secure
 
 #### **Saving the OTP:**
 ```php
-use App\Assist\Encryptions\OTPEncryption;
 
 $otpCode = '123456';
 $hashedOtp = (new OTPEncryption())->hashOTP($otpCode);
 
-// ⚠️ Security Reminder: Always store the securely hashed OTP to protect against data leaks.
+⚠️ **Security Note:** Always store OTPs securely by hashing them. This protects sensitive data from being compromised in the event of a database breach.
 
-// Store the hashed OTP in the database
 $stmt = $pdo->prepare("
 INSERT INTO {$tableName} (recipient_id, device_id, code, expiry)
 VALUES (:recipient_id, :device_id, :code, :expiry)
@@ -648,7 +672,6 @@ $stmt->execute([
 
 #### **Verifying the OTP:**
 ```php
-use App\Assist\Encryptions\OTPEncryption;
 
 // The user-provided OTP to verify.
 $userProvidedOtp = '123456';
@@ -708,6 +731,7 @@ if ($storedHashedOtp) {
 ### **7. Error Messaging**
 - The library returns **clear and informative error messages** for failed attempts, helping users understand the reason for failure.
 - However, it avoids exposing **sensitive information** that could be useful to attackers, such as whether a specific OTP or user exists.
+- We recommend using a centralized logging library (such as [Monolog](https://github.com/Seldaek/monolog)) or an external monitoring service (like Sentry or New Relic) to track OTP-related errors and failures. This will help you detect abuse, troubleshoot issues, and monitor system health effectively.
 
 #### **Example:**
 ```php
