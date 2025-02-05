@@ -88,18 +88,14 @@ The `Device OTP Manager` library is a robust, secure OTP (One-Time Password) man
 
 ## **Usage**
 ### 1. **Instantiate the OTP Manager using the Factory**
-You can create an instance of `OTPAppDeviceManager` using the factory method with default or custom settings:
+You can create an instance of `OTPManager` using the factory method with default or custom settings:
 
 ```php
-use Maatify\OTPDeviceManager\OTPAppDeviceManagerFactory;  
-use Maatify\OTPManager\Enums\RecipientTypeIdEnum;  
-use Maatify\OTPManager\Enums\OtpSenderTypeIdEnum;  
-use Maatify\AppController\Enums\EnumAppTypeId;  
-use Maatify\OTPManager\Contracts\OTPEncryptionInterface;  
+use Maatify\AppController\Enums\EnumAppTypeId;use Maatify\OTPManager\Enums\OtpSenderTypeIdEnum;use Maatify\OTPManager\Enums\RecipientTypeIdEnum;use Maatify\OTPManager\OTPManagerFactory;  
 
 $pdo = new PDO('mysql:host=localhost;dbname=your_database', 'username', 'password');  
 
-$otpManager = OTPAppDeviceManagerFactory::create(  
+$otpManager = OTPManagerFactory::create(  
     pdo: $pdo,  
     otpEncryption: new OTPEncryption(),  
     tableName: 'ct_otp_code',  
@@ -158,7 +154,7 @@ Here are solutions to some common issues when using the OTP Manager:
 **Solution:**
 - Increase the `$expiry_of_code` parameter in the configuration. For example:
 ```php
-$otpManager = OTPAppDeviceManagerFactory::create(
+$otpManager = OTPManagerFactory::create(
     pdo: $pdo,
     expiry_of_code: 300  // Set expiration to 5 minutes
 );
@@ -195,11 +191,11 @@ When creating the OTP manager using the factory, you can customize the following
 This library follows a clean, modular structure to handle OTP functionality effectively:
 
 ### **1. Core Classes**
-- **`OTPAppDeviceManager`**:  
+- **`OTPManager`**:  
   Manages OTP requests, validations, and responses. Handles error scenarios such as pending requests, retry delays, and expired or invalid OTPs.
 
-- **`OTPAppDeviceManagerFactory`**:  
-  Provides a factory method to instantiate the `OTPAppDeviceManager` with custom configurations.
+- **`OTPManagerFactory`**:  
+  Provides a factory method to instantiate the `OTPManager` with custom configurations.
 
 - **`OTPAppDeviceRepository`**:  
   Handles database interactions for storing, retrieving, and validating OTP codes.
@@ -490,7 +486,7 @@ The `$retryDelays` array controls how long users must wait between retrying OTP 
 #### **Example:**
 ```php
 $retryDelays = [30, 120, 240];  // Custom retry durations in seconds
-$otpManager = OTPAppDeviceManagerFactory::create(
+$otpManager = OTPManagerFactory::create(
     pdo: $pdo,
     tableName: 'ct_otp_code',
     retryDelays: $retryDelays
@@ -615,7 +611,7 @@ class OTPEncryption implements OTPEncryptionInterface
 ```php
 $retryDelays = [60, 180, 300];  // Delays between retries in seconds
 
-$otpManager = OTPAppDeviceManagerFactory::create(
+$otpManager = OTPManagerFactory::create(
 pdo: $pdo,
 retryDelays: $retryDelays
 );
@@ -635,7 +631,7 @@ This configuration ensures that OTP requests and verifications are throttled app
 
 #### **Example Configuration**
 ```php
-$otpManager = OTPAppDeviceManagerFactory::create(
+$otpManager = OTPManagerFactory::create(
     pdo: $pdo,
     expiry_of_code: 300  // Set OTP expiration to 300 seconds
 );

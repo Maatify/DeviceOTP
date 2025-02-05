@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Maatify\OTPDeviceManager;
+namespace Maatify\OTPManager;
 
 use Maatify\AppController\Enums\EnumAppTypeId;
 use Maatify\OTPManager\Contracts\OTPEncryptionInterface;
@@ -19,7 +19,7 @@ use Maatify\OTPManager\Enums\OtpSenderTypeIdEnum;
 use Maatify\OTPManager\Enums\RecipientTypeIdEnum;
 use PDO;
 
-class OTPAppDeviceManagerFactory
+class OTPManagerFactory
 {
     public static function create(
         PDO $pdo,
@@ -37,10 +37,10 @@ class OTPAppDeviceManagerFactory
         int $maxRolePendingOTPs = 5,   //10 role-specific limits
         int $maxTimeForDenied = 6000,
         int $expiry_of_code = 180,
-    ): OTPAppDeviceManager
+    ): OTPManager
     {
         // Instantiate repository and handlers
-        $otpRepository = new OTPAppDeviceRepository(
+        $otpRepository = new OTPRepository(
             pdo            : $pdo,
             otpEncryption  : $otpEncryption,
             tableName      : $tableName,
@@ -49,16 +49,16 @@ class OTPAppDeviceManagerFactory
             otpSenderTypeId: $otpSenderTypeId
         );
 
-        $otpRetryHandler = new OTPAppDeviceRetryHandler(
+        $otpRetryHandler = new OTPRetryHandler(
             $retryDelays,
             $otpRepository,
             maxTimeForDenied: $maxTimeForDenied,
         );
 
         //        $otpRoleChecker = new OTPRoleChecker($maxDevicePendingOTPs, $maxRolePendingOTPs, $otpRepository);
-        $otpRoleChecker = new OTPAppDeviceRoleChecker(sizeof($retryDelays), $maxRolePendingOTPs, $otpRepository);
+        $otpRoleChecker = new OTPRoleChecker(sizeof($retryDelays), $maxRolePendingOTPs, $otpRepository);
 
         // Return fully constructed OTPManager
-        return new OTPAppDeviceManager($otpRepository, $otpRoleChecker, $otpRetryHandler, $expiry_of_code);
+        return new OTPManager($otpRepository, $otpRoleChecker, $otpRetryHandler, $expiry_of_code);
     }
 }

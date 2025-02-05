@@ -11,15 +11,15 @@
 
 declare(strict_types=1);
 
-namespace Maatify\OTPDeviceManager;
+namespace Maatify\OTPManager;
 
-class OTPAppDeviceRetryHandler {
+class OTPRetryHandler {
     private array $retryDelays;
-    private OTPAppDeviceRepository $otpDeviceRepository;
+    private OTPRepository $otpDeviceRepository;
 
     private int $timeLeft = 0;
     private int $maxTimeForDenied;
-    public function __construct(array $retryDelays, OTPAppDeviceRepository $otpRepository, int $maxTimeForDenied = 6000) {
+    public function __construct(array $retryDelays, OTPRepository $otpRepository, int $maxTimeForDenied = 6000) {
         $this->retryDelays = $retryDelays;
         $this->otpDeviceRepository = $otpRepository;
         $this->maxTimeForDenied = $maxTimeForDenied;

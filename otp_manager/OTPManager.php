@@ -13,20 +13,18 @@ declare(strict_types=1);
 
 namespace Maatify\OTPManager;
 
-namespace Maatify\OTPDeviceManager;
-
 use App\Assist\Encryptions\OTPEncryption;
 use Maatify\Functions\GeneralFunctions;
 use Maatify\Logger\Logger;
 use Random\RandomException;
 
-class OTPAppDeviceManager {
-    private OTPAppDeviceRepository $otpRepository;
-    private OTPAppDeviceRoleChecker $roleChecker;
-    private OTPAppDeviceRetryHandler $retryHandler;
+class OTPManager {
+    private OTPRepository $otpRepository;
+    private OTPRoleChecker $roleChecker;
+    private OTPRetryHandler $retryHandler;
     private int $expiry_of_code;
 
-    public function __construct(OTPAppDeviceRepository $otpRepository, OTPAppDeviceRoleChecker $roleChecker, OTPAppDeviceRetryHandler $retryHandler, int $expiry_of_code = 180) {
+    public function __construct(OTPRepository $otpRepository, OTPRoleChecker $roleChecker, OTPRetryHandler $retryHandler, int $expiry_of_code = 180) {
         $this->otpRepository = $otpRepository;
         $this->roleChecker = $roleChecker;
         $this->retryHandler = $retryHandler;

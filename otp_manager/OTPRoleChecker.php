@@ -11,14 +11,14 @@
 
 declare(strict_types=1);
 
-namespace Maatify\OTPDeviceManager;
+namespace Maatify\OTPManager;
 
-class OTPAppDeviceRoleChecker {
+class OTPRoleChecker {
     private int $maxDevicePendingOTPs;
     private int $maxRolePendingOTPs;
-    private OTPAppDeviceRepository $otpDeviceRepository;
+    private OTPRepository $otpDeviceRepository;
 
-    public function __construct(int $maxDevicePendingOTPs, int $maxRolePendingOTPs, OTPAppDeviceRepository $otpRepository) {
+    public function __construct(int $maxDevicePendingOTPs, int $maxRolePendingOTPs, OTPRepository $otpRepository) {
         $this->maxDevicePendingOTPs = $maxDevicePendingOTPs;
         $this->maxRolePendingOTPs = $maxRolePendingOTPs;
         $this->otpDeviceRepository = $otpRepository;
