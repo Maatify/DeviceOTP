@@ -1,3 +1,11 @@
+[![Current version](https://img.shields.io/packagist/v/maatify/device-otp)][pkg]
+[![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/maatify/device-otp)][pkg]
+[![Monthly Downloads](https://img.shields.io/packagist/dm/maatify/device-otp)][pkg-stats]
+[![Total Downloads](https://img.shields.io/packagist/dt/maatify/device-otp)][pkg-stats]
+[![Stars](https://img.shields.io/packagist/stars/maatify/device-otp)](https://github.com/maatify/DeviceOTP/stargazers)
+
+[pkg]: <https://packagist.org/packages/maatify/device-otp>
+[pkg-stats]: <https://packagist.org/packages/maatify/device-otp/stats>
 
 # **Device OTP Manager Library**
 
