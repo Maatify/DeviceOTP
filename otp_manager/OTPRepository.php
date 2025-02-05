@@ -23,6 +23,8 @@ namespace Maatify\OTPManager;
 
 use Maatify\AppController\Enums\EnumAppTypeId;
 use Maatify\OTPManager\Contracts\OTPEncryptionInterface;
+use Maatify\OTPManager\Contracts\OtpSenderTypeIdEnumInterface;
+use Maatify\OTPManager\Contracts\RecipientTypeIdEnumInterface;
 use Maatify\OTPManager\Enums\OtpSenderTypeIdEnum;
 use Maatify\OTPManager\Enums\RecipientTypeIdEnum;
 use PDO;
@@ -31,9 +33,9 @@ class OTPRepository
 {
     private PDO $pdo;
     private string $tableName;
-    private RecipientTypeIdEnum $recipientTypeId;
+    private RecipientTypeIdEnumInterface $recipientTypeId;
     private EnumAppTypeId $appTypeId;
-    private OtpSenderTypeIdEnum $otpSenderTypeId;
+    private OtpSenderTypeIdEnumInterface $otpSenderTypeId;
 
     private OTPEncryptionInterface $otpEncryption;
 
@@ -41,9 +43,9 @@ class OTPRepository
         PDO $pdo,
         OTPEncryptionInterface $otpEncryption,
         string $tableName = 'ct_otp_code',
-        RecipientTypeIdEnum $recipientTypeId = RecipientTypeIdEnum::Customer,
+        RecipientTypeIdEnumInterface $recipientTypeId = RecipientTypeIdEnum::Customer,
         EnumAppTypeId $appTypeId = EnumAppTypeId::Web,
-        OtpSenderTypeIdEnum $otpSenderTypeId = OtpSenderTypeIdEnum::SMS
+        OtpSenderTypeIdEnumInterface $otpSenderTypeId = OtpSenderTypeIdEnum::SMS
     )
     {
         $this->otpEncryption = $otpEncryption;

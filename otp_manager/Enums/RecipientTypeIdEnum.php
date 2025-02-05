@@ -21,10 +21,22 @@ declare(strict_types=1);
 
 namespace Maatify\OTPManager\Enums;
 
-enum RecipientTypeIdEnum: int
+use Maatify\OTPManager\Contracts\RecipientTypeIdEnumInterface;
+
+enum RecipientTypeIdEnum: int implements RecipientTypeIdEnumInterface
 {
     case Customer = 1;
     case Admin = 2;
     case Merchant = 3;
     case Channel = 4;
+
+    public function getValue(): int
+    {
+        return $this->value;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
 }

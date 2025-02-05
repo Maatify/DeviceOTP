@@ -4,7 +4,7 @@
  * @Liberary    DeviceOTP
  * @Project     DeviceOTP
  * @author      Mohamed Abdulalim (megyptm) <mohamed@maatify.dev>
- * @since       2025-02-02 06:37
+ * @since       2025-02-05 10:47
  * @see         https://www.maatify.dev Maatify.com
  * @link        https://github.com/Maatify/DeviceOTP  view project on GitHub
  * @link        https://github.com/Maatify/AppHandler  (maatify/app-handler)
@@ -17,30 +17,14 @@
  *
  */
 
+
 declare(strict_types=1);
 
-namespace Maatify\OTPManager\Enums;
+namespace Maatify\OTPManager\Contracts;
 
-use Maatify\OTPManager\Contracts\OtpSenderTypeIdEnumInterface;
-
-enum OtpSenderTypeIdEnum: int implements OtpSenderTypeIdEnumInterface
+interface RecipientTypeIdEnumInterface
 {
-    case SMS = 1;
-    case EMAIL = 2;
-    case PUSH_NOTIFICATION = 3;
-    case WHATSAPP = 4;
-    case TELEGRAM = 5;
-    case FACEBOOK = 6;
-    case TWITTER = 7;
-    case LINKEDIN = 8;
+    public function getValue(): int;
 
-    public function getValue(): int
-    {
-        return $this->value;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
+    public function getName(): string;
 }
