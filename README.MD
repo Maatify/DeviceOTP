@@ -125,7 +125,7 @@ if ($response['status'] === 'success') {
 ### 3. **Confirming an OTP**
 To confirm the OTP provided by the user:
 ```php
-$response = $otpManager->confirmOTP($recipientId = 1234, $deviceId = 'device_001', $otpCode = '123456');
+$response = $otpManager->confirmOTP($recipientId = 1234, $otpCode = '123456', $deviceId = 'device_001');
 
 if ($response['status'] === 'success') {
     echo $response['message'];  // Display success message
@@ -446,7 +446,7 @@ The OTP verification process involves validating the provided OTP against the st
 ### **Example:**
 You can call the `confirmOTP` method to validate the OTP provided by the user:
 ```php
-$response = $otpManager->confirmOTP($recipientId = 1234, $deviceId = 'device_001', $otpCode = '123456');
+$response = $otpManager->confirmOTP($recipientId = 1234, $otpCode = '123456', $deviceId = 'device_001');
 
 switch ($response['code']) {
     case 200:

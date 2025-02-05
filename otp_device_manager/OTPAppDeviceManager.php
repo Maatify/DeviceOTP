@@ -33,7 +33,7 @@ class OTPAppDeviceManager {
         $this->expiry_of_code = $expiry_of_code;
     }
 
-    public function requestOTP(int $recipientId, string $deviceId): array {
+    public function requestOTP(int $recipientId, string $deviceId = ''): array {
 
 
         if ($this->roleChecker->hasTooManyPendingOTPsForRole($recipientId)) {
@@ -79,7 +79,7 @@ class OTPAppDeviceManager {
 
         $otpCodeHashed = (new OTPEncryption())->hashOTP($otpCode);
 
-        $this->otpRepository->insertOTP($recipientId, $deviceId, $otpCodeHashed, $this->expiry_of_code);
+        $this->otpRepository->insertOTP($recipientId, $otpCodeHashed, $this->expiry_of_code, $deviceId);
 
         $timeLeft = $this->retryHandler->successTimeLeft($retryAttempt);
 
@@ -92,7 +92,7 @@ class OTPAppDeviceManager {
             'waiting_seconds' => $timeLeft];
     }
 
-    public function confirmOTP(int $recipientId, string $deviceId, string $otpCode): array {
+    public function confirmOTP(int $recipientId, string $otpCode, string $deviceId = ''): array {
         $result = $this->otpRepository->confirmOTP($recipientId, $deviceId, $otpCode);
 
         return match ($result) {

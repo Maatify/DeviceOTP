@@ -155,7 +155,7 @@ class OTPAppDeviceRepository
         return (int)$stmt->fetchColumn(); // Return the last time
     }
 
-    public function insertOTP(int $recipientId, string $deviceId, string $otpCode, int $expiry): void
+    public function insertOTP(int $recipientId, string $otpCode, int $expiry, string $deviceId = ''): void
     {
         $stmt = $this->pdo->prepare("
             INSERT INTO {$this->tableName} (recipient_type_id, recipient_id, app_type_id, device_id, code, `time`, expiry, otp_sender_type_id)
