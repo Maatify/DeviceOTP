@@ -24,9 +24,9 @@ namespace Maatify\OTPManager;
 
 use Maatify\AppController\Contracts\AppTypeIdInterface;
 use Maatify\AppController\Enums\AppTypeIdEnum;
-use Maatify\OTPManager\Contracts\OTPEncryptionInterface;
-use Maatify\OTPManager\Contracts\OTPSenderTypeIdInterface;
-use Maatify\OTPManager\Contracts\RecipientTypeIdInterface;
+use Maatify\OTPManager\Contracts\Encryptions\OTPEncryptionInterface;
+use Maatify\OTPManager\Contracts\Enums\OTPSenderTypeIdInterface;
+use Maatify\OTPManager\Contracts\Enums\RecipientTypeIdInterface;
 use Maatify\OTPManager\Enums\OTPSenderTypeIdEnum;
 use Maatify\OTPManager\Enums\RecipientTypeIdEnum;
 use PDO;
@@ -62,13 +62,13 @@ class OTPManagerFactory
         );
 
         $otpRetryHandler = new OTPRetryHandler(
-            $retryDelays,
             $otpRepository,
+            $retryDelays,
             maxTimeForDenied: $maxTimeForDenied,
         );
 
         //        $otpRoleChecker = new OTPRoleChecker($maxDevicePendingOTPs, $maxRolePendingOTPs, $otpRepository);
-        $otpRoleChecker = new OTPRoleChecker(sizeof($retryDelays), $maxRolePendingOTPs, $otpRepository);
+        $otpRoleChecker = new OTPRoleChecker($otpRepository, sizeof($retryDelays), $maxRolePendingOTPs);
 
         // Return fully constructed OTPManager
         return new OTPManager($otpEncryption, $otpRepository, $otpRoleChecker, $otpRetryHandler, $expiry_of_code);

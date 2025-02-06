@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Maatify\OTPManager\Service;
 
-use Maatify\OTPManager\Contracts\OTPSenderTypeIdInterface;
+use Maatify\OTPManager\Contracts\Enums\OTPSenderTypeIdInterface;
 
 class OTPSenderTypeIdService
 {

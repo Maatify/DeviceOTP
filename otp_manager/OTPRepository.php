@@ -24,33 +24,30 @@ namespace Maatify\OTPManager;
 
 use Maatify\AppController\Contracts\AppTypeIdInterface;
 use Maatify\AppController\Enums\AppTypeIdEnum;
-use Maatify\OTPManager\Contracts\OTPEncryptionInterface;
-use Maatify\OTPManager\Contracts\OTPSenderTypeIdInterface;
-use Maatify\OTPManager\Contracts\RecipientTypeIdInterface;
+use Maatify\OTPManager\Contracts\Encryptions\OTPEncryptionInterface;
+use Maatify\OTPManager\Contracts\Enums\OTPSenderTypeIdInterface;
+use Maatify\OTPManager\Contracts\Enums\RecipientTypeIdInterface;
+use Maatify\OTPManager\Contracts\OTPRepositoryInterface;
 use Maatify\OTPManager\Enums\OTPSenderTypeIdEnum;
 use Maatify\OTPManager\Enums\RecipientTypeIdEnum;
 use PDO;
 
-class OTPRepository
+class OTPRepository implements OTPRepositoryInterface
 {
     private PDO $pdo;
     private string $tableName;
     private RecipientTypeIdInterface $recipientTypeId;
     private AppTypeIdInterface $appTypeId;
     private OTPSenderTypeIdInterface $otpSenderTypeId;
-
-    private OTPEncryptionInterface $otpEncryption;
-
     public function __construct(
         PDO $pdo,
-        OTPEncryptionInterface $otpEncryption,
+        private readonly OTPEncryptionInterface $otpEncryption,
         string $tableName = 'ct_otp_code',
         RecipientTypeIdInterface $recipientTypeId = RecipientTypeIdEnum::Customer,
         AppTypeIdInterface $appTypeId = AppTypeIdEnum::Web,
         OTPSenderTypeIdInterface $otpSenderTypeId = OTPSenderTypeIdEnum::SMS
     )
     {
-        $this->otpEncryption = $otpEncryption;
         $this->pdo = $pdo;
         $this->tableName = $tableName;
         $this->recipientTypeId = $recipientTypeId;
@@ -167,7 +164,7 @@ class OTPRepository
         return (int)$stmt->fetchColumn(); // Return the last time
     }
 
-    public function insertOTP(int $recipientId, string $otpCode, int $expiry, string $deviceId = ''): void
+    public function insertOTP(int $recipientId, string $otpCodeHashed, int $expiry_of_code, string $deviceId = ''): void
     {
         $stmt = $this->pdo->prepare("
             INSERT INTO {$this->tableName} (recipient_type_id, recipient_id, app_type_id, device_id, code, `time`, expiry, otp_sender_type_id)
@@ -178,8 +175,8 @@ class OTPRepository
             ':recipient_id'       => $recipientId,
             ':app_type_id'        => $this->appTypeId->getValue(),
             ':device_id'          => $deviceId,
-            ':code'               => $otpCode,
-            ':expiry'             => $expiry,
+            ':code'               => $otpCodeHashed,
+            ':expiry'             => $expiry_of_code,
             ':otp_sender_type_id' => $this->otpSenderTypeId->getValue(),
         ]);
     }

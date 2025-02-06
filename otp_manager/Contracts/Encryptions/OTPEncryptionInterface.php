@@ -20,7 +20,7 @@
 
 declare(strict_types=1);
 
-namespace Maatify\OTPManager\Contracts;
+namespace Maatify\OTPManager\Contracts\Encryptions;
 
 interface OTPEncryptionInterface
 {

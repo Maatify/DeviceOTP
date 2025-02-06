@@ -36,7 +36,7 @@
 
 declare(strict_types=1);
 
-namespace Maatify\OTPManager\Contracts;
+namespace Maatify\OTPManager\Contracts\Enums;
 
 interface OTPSenderTypeIdInterface
 {

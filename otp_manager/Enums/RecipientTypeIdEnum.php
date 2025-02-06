@@ -43,7 +43,7 @@ declare(strict_types=1);
 
 namespace Maatify\OTPManager\Enums;
 
-use Maatify\OTPManager\Contracts\RecipientTypeIdInterface;
+use Maatify\OTPManager\Contracts\Enums\RecipientTypeIdInterface;
 
 enum RecipientTypeIdEnum: int implements RecipientTypeIdInterface
 {
@@ -57,9 +57,9 @@ enum RecipientTypeIdEnum: int implements RecipientTypeIdInterface
      *
      * @param   int  $type_id
      *
-     * @return ?self
+     * @return ?RecipientTypeIdInterface
      */
-    public static function validate(int $type_id): ?self
+    public static function validate(int $type_id): ?RecipientTypeIdInterface
     {
         return self::tryFrom($type_id);
     }

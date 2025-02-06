@@ -610,8 +610,9 @@ $stmt->execute([':recipient_id' => $recipientId]);
   **bcrypt** if compatibility or performance is a concern. Choose the mechanism that best fits your security and performance requirements.
 
 #### **Custom OTPEncryption Class:**
+
 ```php
-use Maatify\OTPManager\Contracts\OTPEncryptionInterface;
+use Maatify\OTPManager\Contracts\Encryptions\OTPEncryptionInterface;
 
 class OTPEncryption implements OTPEncryptionInterface
 {

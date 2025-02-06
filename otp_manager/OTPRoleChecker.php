@@ -22,15 +22,20 @@ declare(strict_types=1);
 
 namespace Maatify\OTPManager;
 
-class OTPRoleChecker {
+use Maatify\OTPManager\Contracts\OTPRepositoryInterface;
+use Maatify\OTPManager\Contracts\OTPRoleCheckerInterface;
+
+class OTPRoleChecker implements OTPRoleCheckerInterface{
     private int $maxDevicePendingOTPs;
     private int $maxRolePendingOTPs;
-    private OTPRepository $otpDeviceRepository;
 
-    public function __construct(int $maxDevicePendingOTPs, int $maxRolePendingOTPs, OTPRepository $otpRepository) {
+    public function __construct(
+        private readonly OTPRepositoryInterface $otpDeviceRepository,
+        int $maxDevicePendingOTPs,
+        int $maxRolePendingOTPs
+    ) {
         $this->maxDevicePendingOTPs = $maxDevicePendingOTPs;
         $this->maxRolePendingOTPs = $maxRolePendingOTPs;
-        $this->otpDeviceRepository = $otpRepository;
     }
 
     public function hasTooManyPendingOTPs(int $recipientId, string $deviceId): bool {

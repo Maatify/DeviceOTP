@@ -24,20 +24,20 @@ namespace Maatify\OTPManager;
 
 use Maatify\Functions\GeneralFunctions;
 use Maatify\Logger\Logger;
-use Maatify\OTPManager\Contracts\OTPEncryptionInterface;
+use Maatify\OTPManager\Contracts\Encryptions\OTPEncryptionInterface;
+use Maatify\OTPManager\Contracts\OTPRepositoryInterface;
+use Maatify\OTPManager\Contracts\OTPRetryHandlerInterface;
+use Maatify\OTPManager\Contracts\OTPRoleCheckerInterface;
 use Random\RandomException;
 
 class OTPManager {
-    private OTPRepository $otpRepository;
-    private OTPRoleChecker $roleChecker;
-    private OTPRetryHandler $retryHandler;
     private int $expiry_of_code;
-    private OTPEncryptionInterface $otpEncryption;
-    public function __construct(OTPEncryptionInterface $otpEncryption, OTPRepository $otpRepository, OTPRoleChecker $roleChecker, OTPRetryHandler $retryHandler, int $expiry_of_code = 180) {
-        $this->otpEncryption = $otpEncryption;
-        $this->otpRepository = $otpRepository;
-        $this->roleChecker = $roleChecker;
-        $this->retryHandler = $retryHandler;
+    public function __construct(
+        private readonly OTPEncryptionInterface $otpEncryption,
+        private readonly OTPRepositoryInterface $otpRepository,
+        private readonly OTPRoleCheckerInterface $roleChecker,
+        private readonly OTPRetryHandlerInterface $retryHandler,
+        int $expiry_of_code = 180) {
         $this->expiry_of_code = $expiry_of_code;
     }
 

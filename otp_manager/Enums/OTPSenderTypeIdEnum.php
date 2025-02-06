@@ -44,7 +44,7 @@ declare(strict_types=1);
 
 namespace Maatify\OTPManager\Enums;
 
-use Maatify\OTPManager\Contracts\OTPSenderTypeIdInterface;
+use Maatify\OTPManager\Contracts\Enums\OTPSenderTypeIdInterface;
 
 enum OTPSenderTypeIdEnum: int implements OTPSenderTypeIdInterface
 {
@@ -62,9 +62,9 @@ enum OTPSenderTypeIdEnum: int implements OTPSenderTypeIdInterface
      *
      * @param   int  $type_id
      *
-     * @return ?self
+     * @return ?OTPSenderTypeIdInterface
      */
-    public static function validate(int $type_id): ?self
+    public static function validate(int $type_id): ?OTPSenderTypeIdInterface
     {
         return self::tryFrom($type_id);
     }

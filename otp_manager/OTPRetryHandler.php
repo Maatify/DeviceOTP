@@ -22,15 +22,18 @@ declare(strict_types=1);
 
 namespace Maatify\OTPManager;
 
-class OTPRetryHandler {
-    private array $retryDelays;
-    private OTPRepository $otpDeviceRepository;
+use Maatify\OTPManager\Contracts\OTPRepositoryInterface;
+use Maatify\OTPManager\Contracts\OTPRetryHandlerInterface;
 
+class OTPRetryHandler implements OTPRetryHandlerInterface {
+    private array $retryDelays;
     private int $timeLeft = 0;
     private int $maxTimeForDenied;
-    public function __construct(array $retryDelays, OTPRepository $otpRepository, int $maxTimeForDenied = 6000) {
+    public function __construct(
+        private readonly OTPRepositoryInterface $otpDeviceRepository,
+        array $retryDelays,
+        int $maxTimeForDenied = 6000) {
         $this->retryDelays = $retryDelays;
-        $this->otpDeviceRepository = $otpRepository;
         $this->maxTimeForDenied = $maxTimeForDenied;
     }
 
