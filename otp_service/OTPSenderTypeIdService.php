@@ -24,13 +24,11 @@ namespace Maatify\OTPManager\Service;
 
 use Maatify\OTPManager\Contracts\Enums\OTPSenderTypeIdInterface;
 
-class OTPSenderTypeIdService
+readonly class OTPSenderTypeIdService
 {
-    private OTPSenderTypeIdInterface $appTypeIdEnum;
 
-    public function __construct(OTPSenderTypeIdInterface $appTypeIdEnum)
+    public function __construct(private OTPSenderTypeIdInterface $appTypeIdEnum)
     {
-        $this->appTypeIdEnum = $appTypeIdEnum;
     }
 
     public function validate(int $type_id): ?OTPSenderTypeIdInterface

@@ -24,13 +24,11 @@ namespace Maatify\OTPManager\Service;
 
 use Maatify\OTPManager\Contracts\Enums\RecipientTypeIdInterface;
 
-class RecipientTypeIdService
+readonly class RecipientTypeIdService
 {
-    private RecipientTypeIdInterface $appTypeIdEnum;
 
-    public function __construct(RecipientTypeIdInterface $appTypeIdEnum)
+    public function __construct(private RecipientTypeIdInterface $appTypeIdEnum)
     {
-        $this->appTypeIdEnum = $appTypeIdEnum;
     }
 
     public function validate(int $type_id): ?RecipientTypeIdInterface

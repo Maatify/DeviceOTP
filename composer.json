@@ -1,7 +1,7 @@
 {
   "name": "maatify/device-otp",
   "description": "Official PHP library for maatify.dev Device OTP handler, known by our team",
-  "version": "4.0.0001",
+  "version": "4.0.0002",
   "license": "proprietary",
   "homepage": "https://github.com/Maatify/",
   "authors": [
@@ -49,7 +49,10 @@
   },
   "autoload": {
     "psr-4": {
-      "Maatify\\OTPManager\\" : "otp_manager/"
+      "Maatify\\OTPManager\\" : "otp_manager/",
+      "Maatify\\OTPManager\\Contracts\\" : "otp_contracts/",
+      "Maatify\\OTPManager\\Enums\\" : "otp_enums/",
+      "Maatify\\OTPManager\\Service\\" : "otp_service/"
     }
   }
 }
