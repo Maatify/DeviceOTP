@@ -82,7 +82,7 @@ class OTPManager {
             $otpCode = (string) random_int(100000, 999999);
         } catch (RandomException $e) {
             Logger::RecordLog($e, 'OTPManagerException');
-            $otpCode = GeneralFunctions::GenerateOTP(6);
+            $otpCode = (new OTPGenerator())->generateOTP();
         }
 
         $otpCodeHashed = $this->otpEncryption->hashOTP($otpCode);
