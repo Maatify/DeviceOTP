@@ -92,7 +92,10 @@ The `Device OTP Manager` library is a robust, secure OTP (One-Time Password) man
 You can create an instance of `OTPManager` using the factory method with default or custom settings:
 
 ```php
-use Maatify\AppController\Enums\EnumAppTypeId;use Maatify\OTPManager\Enums\OTPSenderTypeIdEnum;use Maatify\OTPManager\Enums\RecipientTypeIdEnum;use Maatify\OTPManager\OTPManagerFactory;  
+use Maatify\AppController\Enums\EnumAppTypeId;
+use Maatify\OTPManager\Enums\OTPSenderTypeIdEnum;
+use Maatify\OTPManager\Enums\RecipientTypeIdEnum;
+use Maatify\OTPManager\OTPManagerFactory;  
 
 $pdo = new PDO('mysql:host=localhost;dbname=your_database', 'username', 'password');  
 
