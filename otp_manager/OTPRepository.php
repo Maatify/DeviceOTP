@@ -186,7 +186,7 @@ class OTPRepository implements OTPRepositoryInterface
     public function confirmOTP(int $recipientId, string $deviceId, string $otpCode, bool $terminate_all_valide_codes = false, bool $confirm_by_any_sender_type = false): int
     {
         $query_string = "
-            SELECT t1.otp_id, t1.code, TIMESTAMPDIFF(SECOND, t1.`time`, NOW()) AS elapsed_time, t1.expiry
+            SELECT t1.otp_id, t1.code, TIMESTAMPDIFF(SECOND, t1.`time`, NOW()) AS elapsed_time, t1.expiry, t1.otp_sender_type_id
             FROM {$this->tableName} t1
             WHERE t1.recipient_type_id = :recipient_type_id 
               AND t1.recipient_id = :recipient_id 
@@ -211,7 +211,7 @@ class OTPRepository implements OTPRepositoryInterface
             ':app_type_id'        => $this->appTypeId->getValue(),
         ];
 
-        if($confirm_by_any_sender_type) {
+        if(!$confirm_by_any_sender_type) {
             $query_string .= " AND t2.otp_sender_type_id = t1.otp_sender_type_id
             )
             AND t1.otp_sender_type_id = :otp_sender_type_id ";
