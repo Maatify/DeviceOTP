@@ -30,6 +30,7 @@ use Maatify\OTPManager\Contracts\Enums\RecipientTypeIdInterface;
 use Maatify\OTPManager\Contracts\OTPRepositoryInterface;
 use Maatify\OTPManager\Enums\OTPSenderTypeIdEnum;
 use Maatify\OTPManager\Enums\RecipientTypeIdEnum;
+use Maatify\OTPManager\Service\OTPSenderTypeIdService;
 use PDO;
 
 class OTPRepository implements OTPRepositoryInterface
@@ -39,6 +40,7 @@ class OTPRepository implements OTPRepositoryInterface
     private RecipientTypeIdInterface $recipientTypeId;
     private AppTypeIdInterface $appTypeId;
     private OTPSenderTypeIdInterface $otpSenderTypeId;
+    private int $otp_sender_type_id;
 
     public function __construct(
         PDO $pdo,
@@ -259,11 +261,14 @@ class OTPRepository implements OTPRepositoryInterface
                             ':app_type_id'       => $this->appTypeId->getValue(),
                             ':otp_id'            => $otpRow['otp_id'],
                         ]);
+
+                        $this->otpSenderTypeId = (new OTPSenderTypeIdService($this->otpSenderTypeId))->validate($otpRow['otp_sender_type_id']);
                     }
 
                     return 200;
                 } else {
                     // Expired Code
+                    $this->otpSenderTypeId = (new OTPSenderTypeIdService($this->otpSenderTypeId))->validate($otpRow['otp_sender_type_id']);
                     return 410;
                 }
             }
@@ -272,6 +277,11 @@ class OTPRepository implements OTPRepositoryInterface
 
         // If no valid OTP was found after looping through
         return 401;
+    }
+
+    public function getOtpSenderTypeId(): int
+    {
+        return $this->otpSenderTypeId->getValue();
     }
 
 }

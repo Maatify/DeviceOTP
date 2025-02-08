@@ -129,21 +129,25 @@ class OTPManager {
                 'status'  => 'success',
                 'code'    => 200,
                 'message' => "Successfully verified the OTP.",
+                'sender_type_id' => $this->otpRepository->getOtpSenderTypeId()
             ],
             410 => [
                 'status'  => 'error',
                 'code'    => 410,
                 'message' => "Expired OTP code.",
+                'sender_type_id' => $this->otpRepository->getOtpSenderTypeId()
             ],
             401 => [
                 'status'  => 'error',
                 'code'    => 401,
                 'message' => "Invalid OTP code.",
+                'sender_type_id' => null
             ],
             default => [
                 'status'  => 'error',
                 'code'    => 404,
                 'message' => "Not Found OTP code.",
+                'sender_type_id' => null
             ],
         };
     }
