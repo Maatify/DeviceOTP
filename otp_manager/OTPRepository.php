@@ -182,9 +182,9 @@ class OTPRepository implements OTPRepositoryInterface
         ]);
     }
 
-    public function confirmOTP(int $recipientId, string $deviceId, string $otpCode, bool $terminate_all_codes = true): int
+    public function confirmOTP(int $recipientId, string $deviceId, string $otpCode, bool $terminate_all_valide_codes = true, bool $confirm_by_any_sender_type = false): int
     {
-        $stmt = $this->pdo->prepare("
+        $query_string = "
             SELECT t1.otp_id, t1.code, TIMESTAMPDIFF(SECOND, t1.`time`, NOW()) AS elapsed_time, t1.expiry
             FROM {$this->tableName} t1
             WHERE t1.recipient_type_id = :recipient_type_id 
@@ -192,7 +192,7 @@ class OTPRepository implements OTPRepositoryInterface
               AND t1.device_id = :device_id 
               AND t1.app_type_id = :app_type_id 
               AND t1.is_success = 0 
-              AND t1.otp_sender_type_id = :otp_sender_type_id 
+              
               AND t1.otp_id > (
                   SELECT IFNULL(MAX(otp_id), 0) 
                   FROM {$this->tableName} t2
@@ -201,18 +201,30 @@ class OTPRepository implements OTPRepositoryInterface
                     AND t2.device_id = t1.device_id
                     AND t2.app_type_id = t1.app_type_id
                     AND t2.is_success > 0
-                    AND t2.otp_sender_type_id = t1.otp_sender_type_id
-              )
-            ORDER BY t1.otp_id DESC;  -- Check all pending OTPs in order of creation
-        ");
+        ";
 
-        $stmt->execute([
+        $params = [
             ':recipient_type_id'  => $this->recipientTypeId->getValue(),
             ':recipient_id'       => $recipientId,
             ':device_id'          => $deviceId,
             ':app_type_id'        => $this->appTypeId->getValue(),
-            ':otp_sender_type_id' => $this->otpSenderTypeId->getValue(),
-        ]);
+        ];
+
+        if($confirm_by_any_sender_type) {
+            $query_string .= " AND t2.otp_sender_type_id = t1.otp_sender_type_id
+            )
+            AND t1.otp_sender_type_id = :otp_sender_type_id ";
+
+            $params[':otp_sender_type_id'] = $this->otpSenderTypeId->getValue();
+        }else{
+            $query_string .= ")";
+        }
+
+        $query_string .= " ORDER BY t1.otp_id DESC; "; //-- Check all pending OTPs in order of creation
+
+        $stmt = $this->pdo->prepare($query_string);
+
+        $stmt->execute($params);
 
 
         // Fetch the first row
@@ -231,7 +243,7 @@ class OTPRepository implements OTPRepositoryInterface
                     $updateStmt = $this->pdo->prepare("UPDATE {$this->tableName} SET is_success = 1 WHERE otp_id = :otp_id");
                     $updateStmt->execute([':otp_id' => $otpRow['otp_id']]);
 
-                    if ($terminate_all_codes) {
+                    if ($terminate_all_valide_codes) {
                         // Mark all codes as expired for customer and device and app_type
                         $updateStmt = $this->pdo->prepare(
                             "UPDATE {$this->tableName} SET is_success = 2
