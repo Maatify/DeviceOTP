@@ -39,6 +39,7 @@ class OTPRepository implements OTPRepositoryInterface
     private RecipientTypeIdInterface $recipientTypeId;
     private AppTypeIdInterface $appTypeId;
     private OTPSenderTypeIdInterface $otpSenderTypeId;
+
     public function __construct(
         PDO $pdo,
         private readonly OTPEncryptionInterface $otpEncryption,
@@ -71,7 +72,7 @@ class OTPRepository implements OTPRepositoryInterface
               WHERE t2.recipient_type_id = t1.recipient_type_id
                 AND t2.recipient_id = t1.recipient_id
                 AND t2.app_type_id = t1.app_type_id
-                AND t2.is_success = 1
+                AND t2.is_success > 0
                 AND t2.otp_sender_type_id = t1.otp_sender_type_id
           )
     ");
@@ -108,7 +109,7 @@ class OTPRepository implements OTPRepositoryInterface
                 AND t2.recipient_id = t1.recipient_id
                 AND t2.device_id = t1.device_id
                 AND t2.app_type_id = t1.app_type_id
-                AND t2.is_success = 1
+                AND t2.is_success > 0
                 AND t2.otp_sender_type_id = t1.otp_sender_type_id
           )
     ");
@@ -146,7 +147,7 @@ class OTPRepository implements OTPRepositoryInterface
                 AND t2.recipient_id = t1.recipient_id
                 AND t2.device_id = t1.device_id
                 AND t2.app_type_id = t1.app_type_id
-                AND t2.is_success = 1
+                AND t2.is_success > 0
                 AND t2.otp_sender_type_id = t1.otp_sender_type_id
           )
         ORDER BY t1.otp_id DESC
@@ -181,7 +182,7 @@ class OTPRepository implements OTPRepositoryInterface
         ]);
     }
 
-    public function confirmOTP(int $recipientId, string $deviceId, string $otpCode): int
+    public function confirmOTP(int $recipientId, string $deviceId, string $otpCode, bool $terminate_all_codes = true): int
     {
         $stmt = $this->pdo->prepare("
             SELECT t1.otp_id, t1.code, TIMESTAMPDIFF(SECOND, t1.`time`, NOW()) AS elapsed_time, t1.expiry
@@ -199,7 +200,7 @@ class OTPRepository implements OTPRepositoryInterface
                     AND t2.recipient_id = t1.recipient_id
                     AND t2.device_id = t1.device_id
                     AND t2.app_type_id = t1.app_type_id
-                    AND t2.is_success = 1
+                    AND t2.is_success > 0
                     AND t2.otp_sender_type_id = t1.otp_sender_type_id
               )
             ORDER BY t1.otp_id DESC;  -- Check all pending OTPs in order of creation
@@ -218,7 +219,7 @@ class OTPRepository implements OTPRepositoryInterface
         $otpRow = $stmt->fetch(PDO::FETCH_ASSOC);
 
         // Check if no rows were returned
-        if (!$otpRow) {
+        if (! $otpRow) {
             return 404;  // No matching OTP found
         }
 
@@ -229,6 +230,25 @@ class OTPRepository implements OTPRepositoryInterface
                     // Mark this specific OTP as used
                     $updateStmt = $this->pdo->prepare("UPDATE {$this->tableName} SET is_success = 1 WHERE otp_id = :otp_id");
                     $updateStmt->execute([':otp_id' => $otpRow['otp_id']]);
+
+                    if ($terminate_all_codes) {
+                        // Mark all codes as expired for customer and device and app_type
+                        $updateStmt = $this->pdo->prepare(
+                            "UPDATE {$this->tableName} SET is_success = 2
+             WHERE recipient_type_id = :recipient_type_id 
+               AND recipient_id = :recipient_id 
+               AND device_id = :device_id 
+               AND app_type_id = :app_type_id 
+               AND is_success = 0 
+               AND otp_id > :otp_id");
+                        $updateStmt->execute([
+                            ':recipient_type_id' => $this->recipientTypeId->getValue(),
+                            ':recipient_id'      => $recipientId,
+                            ':device_id'         => $deviceId,
+                            ':app_type_id'       => $this->appTypeId->getValue(),
+                            ':otp_id'            => $otpRow['otp_id'],
+                        ]);
+                    }
 
                     return 200;
                 } else {
