@@ -125,7 +125,6 @@ class OTPRepository implements OTPRepositoryInterface
         return (int)$stmt->fetchColumn(); // Return the count of pending OTPs
     }
 
-
     public function getLastRequestTime(
         int $recipientId,
         string $deviceId = ''
