@@ -183,7 +183,7 @@ class OTPRepository implements OTPRepositoryInterface
         ]);
     }
 
-    public function confirmOTP(int $recipientId, string $deviceId, string $otpCode, bool $terminate_all_valide_codes = true, bool $confirm_by_any_sender_type = false): int
+    public function confirmOTP(int $recipientId, string $deviceId, string $otpCode, bool $terminate_all_valide_codes = false, bool $confirm_by_any_sender_type = false): int
     {
         $query_string = "
             SELECT t1.otp_id, t1.code, TIMESTAMPDIFF(SECOND, t1.`time`, NOW()) AS elapsed_time, t1.expiry

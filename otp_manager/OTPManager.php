@@ -121,8 +121,8 @@ class OTPManager {
         return ['pending' => false, 'waiting_seconds' => 0];
     }
 
-    public function confirmOTP(int $recipientId, string $otpCode, string $deviceId = '', bool $confirm_by_any_sender_type = false): array {
-        $result = $this->otpRepository->confirmOTP($recipientId, $deviceId, $otpCode, $confirm_by_any_sender_type);
+    public function confirmOTP(int $recipientId, string $otpCode, string $deviceId = '', bool $terminate_all_valide_codes = false, bool $confirm_by_any_sender_type = false): array {
+        $result = $this->otpRepository->confirmOTP($recipientId, $deviceId, $otpCode, $terminate_all_valide_codes, $confirm_by_any_sender_type);
 
         return match ($result) {
             200 => [
