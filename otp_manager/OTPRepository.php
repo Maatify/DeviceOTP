@@ -262,13 +262,15 @@ class OTPRepository implements OTPRepositoryInterface
                             ':otp_id'            => $otpRow['otp_id'],
                         ]);
 
-                        $this->otpSenderTypeId = (new OTPSenderTypeIdService($this->otpSenderTypeId))->validate($otpRow['otp_sender_type_id']);
+                        $this->otpSenderTypeId = (new OTPSenderTypeIdService($this->otpSenderTypeId))->validate((int)$otpRow['otp_sender_type_id']);
+                        $this->otp_sender_type_id = (int)$otpRow['otp_sender_type_id'];
                     }
 
                     return 200;
                 } else {
                     // Expired Code
-                    $this->otpSenderTypeId = (new OTPSenderTypeIdService($this->otpSenderTypeId))->validate($otpRow['otp_sender_type_id']);
+                    $this->otpSenderTypeId = (new OTPSenderTypeIdService($this->otpSenderTypeId))->validate((int)$otpRow['otp_sender_type_id']);
+                    $this->otp_sender_type_id = (int)$otpRow['otp_sender_type_id'];
                     return 410;
                 }
             }
