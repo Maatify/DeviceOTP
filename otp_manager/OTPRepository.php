@@ -159,13 +159,14 @@ class OTPRepository implements OTPRepositoryInterface
     ): array
     {
         $stmt = $this->pdo->prepare("
-        SELECT COUNT(*) AS pending_count
+        SELECT 
+        t1.otp_sender_type_id,
+        COUNT(*) AS count_type
         FROM {$this->tableName} t1
         WHERE t1.recipient_type_id = :recipient_type_id 
           AND t1.recipient_id = :recipient_id 
           AND t1.device_id = :device_id
           AND t1.app_type_id = :app_type_id
-          AND t1.otp_sender_type_id = :otp_sender_type_id
           AND t1.is_success = 0 
           AND t1.otp_id > (
               SELECT COALESCE(MAX(t2.otp_id), 0) 
@@ -176,6 +177,8 @@ class OTPRepository implements OTPRepositoryInterface
                 AND t2.app_type_id = t1.app_type_id
                 AND t2.is_success > 0
                 AND t2.otp_sender_type_id = t1.otp_sender_type_id
+          )
+        GROUP BY t1.otp_sender_type_id
           )
     ");
 
