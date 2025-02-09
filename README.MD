@@ -4,7 +4,7 @@
 
 # **Device OTP Manager Library**
 
-![**Maatify.dev**](https://www.Maatify.dev/assets/img/img/maatify_logo_white.svg)
+![**Maatify.dev**](https://www.maatify.dev/assets/img/img/maatify_logo_white.svg)
 ---
 [![Current version](https://img.shields.io/packagist/v/maatify/device-otp)][pkg]
 [![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/maatify/device-otp)][pkg]
