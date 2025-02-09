@@ -121,6 +121,15 @@ class OTPManager {
         return ['pending' => false, 'waiting_seconds' => 0];
     }
 
+    public function countAllTypesPendingOTPsForRole(int $recipientId): array{
+        return $this->otpRepository->countAllTypesPendingOTPsForRole($recipientId);
+    }
+
+    public function countAllTypesPendingOTPs(int $recipientId, string $deviceId = ''): array
+    {
+        return $this->otpRepository->countAllTypesPendingOTPs($recipientId, $deviceId);
+    }
+
     public function confirmOTP(int $recipientId, string $otpCode, string $deviceId = '', bool $terminate_all_valide_codes = false, bool $confirm_by_any_sender_type = false): array {
         $result = $this->otpRepository->confirmOTP($recipientId, $deviceId, $otpCode, $terminate_all_valide_codes, $confirm_by_any_sender_type);
 

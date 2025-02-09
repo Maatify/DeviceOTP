@@ -89,11 +89,37 @@ class OTPRepository implements OTPRepositoryInterface
         return (int)$stmt->fetchColumn(); // Return the count of pending OTPs
     }
 
+    public function countAllTypesPendingOTPsForRole(int $recipientId): array
+    {
+        $stmt = $this->pdo->prepare("
+        SELECT COUNT(*) AS pending_count
+        FROM {$this->tableName} t1
+        WHERE t1.recipient_type_id = :recipient_type_id 
+          AND t1.recipient_id = :recipient_id
+          AND t1.app_type_id = :app_type_id
+          AND t1.is_success = 0
+          AND t1.otp_id > (
+              SELECT COALESCE(MAX(t2.otp_id), 0) 
+              FROM {$this->tableName} t2
+              WHERE t2.recipient_type_id = t1.recipient_type_id
+                AND t2.recipient_id = t1.recipient_id
+                AND t2.app_type_id = t1.app_type_id
+                AND t2.is_success > 0
+                AND t2.otp_sender_type_id = t1.otp_sender_type_id
+          )
+    ");
 
-    public function countPendingOTPs(
-        int $recipientId,
-        string $deviceId = ''
-    ): int
+        $stmt->execute([
+            ':recipient_type_id'  => $this->recipientTypeId->getValue(),
+            ':recipient_id'       => $recipientId,
+            ':app_type_id'        => $this->appTypeId->getValue(),
+        ]);
+
+        return $stmt->fetchAll(); // Return the array of count of pending OTPs
+    }
+
+
+    public function countPendingOTPs(int $recipientId, string $deviceId = ''): int
     {
         $stmt = $this->pdo->prepare("
         SELECT COUNT(*) AS pending_count
@@ -125,6 +151,42 @@ class OTPRepository implements OTPRepositoryInterface
         ]);
 
         return (int)$stmt->fetchColumn(); // Return the count of pending OTPs
+    }
+
+    public function countAllTypesPendingOTPs(
+        int $recipientId,
+        string $deviceId = ''
+    ): array
+    {
+        $stmt = $this->pdo->prepare("
+        SELECT COUNT(*) AS pending_count
+        FROM {$this->tableName} t1
+        WHERE t1.recipient_type_id = :recipient_type_id 
+          AND t1.recipient_id = :recipient_id 
+          AND t1.device_id = :device_id
+          AND t1.app_type_id = :app_type_id
+          AND t1.otp_sender_type_id = :otp_sender_type_id
+          AND t1.is_success = 0 
+          AND t1.otp_id > (
+              SELECT COALESCE(MAX(t2.otp_id), 0) 
+              FROM {$this->tableName} t2
+              WHERE t2.recipient_type_id = t1.recipient_type_id
+                AND t2.recipient_id = t1.recipient_id
+                AND t2.device_id = t1.device_id
+                AND t2.app_type_id = t1.app_type_id
+                AND t2.is_success > 0
+                AND t2.otp_sender_type_id = t1.otp_sender_type_id
+          )
+    ");
+
+        $stmt->execute([
+            ':recipient_type_id'  => $this->recipientTypeId->getValue(),
+            ':recipient_id'       => $recipientId,
+            ':device_id'          => $deviceId,
+            ':app_type_id'        => $this->appTypeId->getValue(),
+        ]);
+
+        return $stmt->fetchAll(); // Return the array of count of pending OTPs
     }
 
     public function getLastRequestTime(
