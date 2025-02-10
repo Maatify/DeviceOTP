@@ -92,7 +92,7 @@ class OTPRepository implements OTPRepositoryInterface
     public function countAllTypesPendingOTPsForRole(int $recipientId): array
     {
         $stmt = $this->pdo->prepare("
-        SELECT COUNT(*) AS pending_count
+        SELECT COUNT(*) AS count
         FROM {$this->tableName} t1
         WHERE t1.recipient_type_id = :recipient_type_id 
           AND t1.recipient_id = :recipient_id
@@ -107,6 +107,7 @@ class OTPRepository implements OTPRepositoryInterface
                 AND t2.is_success > 0
                 AND t2.otp_sender_type_id = t1.otp_sender_type_id
           )
+        GROUP BY t1.otp_sender_type_id
     ");
 
         $stmt->execute([
@@ -161,7 +162,7 @@ class OTPRepository implements OTPRepositoryInterface
         $stmt = $this->pdo->prepare("
         SELECT 
         t1.otp_sender_type_id,
-        COUNT(*) AS count_type
+        COUNT(*) AS count
         FROM {$this->tableName} t1
         WHERE t1.recipient_type_id = :recipient_type_id 
           AND t1.recipient_id = :recipient_id 
@@ -179,7 +180,6 @@ class OTPRepository implements OTPRepositoryInterface
                 AND t2.otp_sender_type_id = t1.otp_sender_type_id
           )
         GROUP BY t1.otp_sender_type_id
-          )
     ");
 
         $stmt->execute([
