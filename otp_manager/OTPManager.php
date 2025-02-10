@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Maatify\OTPManager;
 
-use Maatify\Functions\GeneralFunctions;
 use Maatify\Logger\Logger;
 use Maatify\OTPManager\Contracts\Encryptions\OTPEncryptionInterface;
 use Maatify\OTPManager\Contracts\OTPRepositoryInterface;
