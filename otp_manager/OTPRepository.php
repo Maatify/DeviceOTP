@@ -93,7 +93,22 @@ class OTPRepository implements OTPRepositoryInterface
     {
         $stmt = $this->pdo->prepare("
         SELECT CAST(t1.otp_sender_type_id AS SIGNED) AS otp_sender_type_id,
-        COUNT(*) AS count
+        COUNT(*) AS count,
+        MAX(t1.time) AS last_time,
+        (
+           SELECT t3.expiry
+           FROM {$this->tableName} t3
+           WHERE t3.otp_sender_type_id = t1.otp_sender_type_id
+             AND t3.otp_id = (
+                 SELECT MAX(t4.otp_id)
+                 FROM {$this->tableName} t4
+                 WHERE t4.otp_sender_type_id = t1.otp_sender_type_id
+                   AND t4.recipient_type_id = t1.recipient_type_id
+                   AND t4.recipient_id = t1.recipient_id
+                   AND t4.app_type_id = t1.app_type_id
+             )
+           LIMIT 1
+        ) AS last_expiry 
         FROM {$this->tableName} t1
         WHERE t1.recipient_type_id = :recipient_type_id 
           AND t1.recipient_id = :recipient_id
@@ -162,7 +177,22 @@ class OTPRepository implements OTPRepositoryInterface
     {
         $stmt = $this->pdo->prepare("
         SELECT CAST(t1.otp_sender_type_id AS SIGNED) AS otp_sender_type_id,
-        COUNT(*) AS count
+        COUNT(*) AS count,
+        MAX(t1.time) AS last_time,
+        (
+           SELECT t3.expiry
+           FROM {$this->tableName} t3
+           WHERE t3.otp_sender_type_id = t1.otp_sender_type_id
+             AND t3.otp_id = (
+                 SELECT MAX(t4.otp_id)
+                 FROM {$this->tableName} t4
+                 WHERE t4.otp_sender_type_id = t1.otp_sender_type_id
+                   AND t4.recipient_type_id = t1.recipient_type_id
+                   AND t4.recipient_id = t1.recipient_id
+                   AND t4.app_type_id = t1.app_type_id
+             )
+           LIMIT 1
+        ) AS last_expiry 
         FROM {$this->tableName} t1
         WHERE t1.recipient_type_id = :recipient_type_id 
           AND t1.recipient_id = :recipient_id 
