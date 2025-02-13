@@ -42,6 +42,8 @@ class OTPRepository implements OTPRepositoryInterface
     private OTPSenderTypeIdInterface $otpSenderTypeId;
     private int $otp_sender_type_id;
 
+    private int $otp_id;
+
     public function __construct(
         PDO $pdo,
         private readonly OTPEncryptionInterface $otpEncryption,
@@ -331,7 +333,7 @@ class OTPRepository implements OTPRepositoryInterface
 
                         $this->otp_sender_type_id = (int)$otpRow['otp_sender_type_id'];
                     }
-
+                    $this->otp_id = (int)$otpRow['otp_id'];
                     return 200;
                 } else {
                     // Expired Code
@@ -349,6 +351,11 @@ class OTPRepository implements OTPRepositoryInterface
     public function getOtpSenderTypeId(): int
     {
         return $this->otp_sender_type_id;
+    }
+
+    public function getOtpId(): int
+    {
+        return $this->otp_id;
     }
 
 }
