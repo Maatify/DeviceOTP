@@ -358,4 +358,11 @@ class OTPRepository implements OTPRepositoryInterface
         return $this->otp_id;
     }
 
+    public function remarkOTPidAsUnusedAndRefreshTime(int $otp_id, string $date_time): void
+    {
+        $updateStmt = $this->pdo->prepare("UPDATE {$this->tableName} SET is_success = 0, time = :time WHERE otp_id = :otp_id");
+        $updateStmt->execute([':otp_id' => $otp_id, ':time' => $date_time]);
+
+    }
+
 }

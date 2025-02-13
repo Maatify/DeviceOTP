@@ -149,7 +149,7 @@ class OTPManager
                 'code'           => 410,
                 'message'        => "Expired OTP code.",
                 'sender_type_id' => $this->otpRepository->getOtpSenderTypeId(),
-                'otp_id'         => $this->otpRepository->getOtpId(),
+                'otp_id'         => 0,
             ],
             401 => [
                 'status'         => 'error',
@@ -166,5 +166,10 @@ class OTPManager
                 'otp_id'         => 0,
             ],
         };
+    }
+
+    public function remarkOTPidAsUnusedAndRefreshTime(int $otp_id, string $date_time): void
+    {
+        $this->otpRepository->remarkOTPidAsUnusedAndRefreshTime($otp_id, $date_time);
     }
 }
