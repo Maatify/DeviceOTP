@@ -43,7 +43,7 @@ class OTPManager
         $this->expiry_of_code = $expiry_of_code;
     }
 
-    public function requestOTP(int $recipientId, string $deviceId = ''): array
+    public function requestOTP(int $recipientId, string $deviceId = '', string $own_otp = ''): array
     {
         if ($this->roleChecker->hasTooManyPendingOTPsForRole($recipientId)) {
             return [
@@ -79,11 +79,15 @@ class OTPManager
             ];
         }
 
-        try {
-            $otpCode = (string)random_int(100000, 999999);
-        } catch (RandomException $e) {
-            Logger::RecordLog($e, 'OTPManagerException');
-            $otpCode = (new OTPGenerator())->generateOTP();
+        if($own_otp){
+            $otpCode = $own_otp;
+        }else{
+            try {
+                $otpCode = (string)random_int(100000, 999999);
+            } catch (RandomException $e) {
+                Logger::RecordLog($e, 'OTPManagerException');
+                $otpCode = (new OTPGenerator())->generateOTP();
+            }
         }
 
         $otpCodeHashed = $this->otpEncryption->hashOTP($otpCode);
