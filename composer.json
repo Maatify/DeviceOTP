@@ -1,7 +1,7 @@
 {
   "name": "maatify/device-otp",
   "description": "Official PHP library for maatify.dev Device OTP handler, known by our team",
-  "version": "5.0.0014",
+  "version": "5.0.1",
   "license": "MIT",
   "homepage": "https://github.com/Maatify/",
   "authors": [
@@ -36,17 +36,11 @@
       "role": "IOS Developer"
     }
   ],
-  "config": {
-    "platform": {
-      "php": "8.2"
-    }
-  },
   "require": {
-    "php": ">=8.2",
     "ext-pdo": "*",
-    "maatify/logger": "^1.3",
+    "maatify/logger": "^5",
     "ext-openssl": "*",
-    "maatify/app-handler": "^3"
+    "maatify/app-handler": "^5"
   },
   "autoload": {
     "psr-4": {
